@@ -4,7 +4,9 @@ set (PROJECT EPol)
 
 project (${PROJECT})
 
-include_directories (../)
+include_directories (.)
+include_directories (./gui)
+include_directories (./calculations)
 
 #set (LIBRARIES
 #		library_1
@@ -17,13 +19,21 @@ include_directories (../)
 if (MSVC)
 	add_definitions (/W4)
 elseif (CMAKE_COMPILER_IS_GNUCXX)
-	add_definitions (-Wall -pedantic)
+	add_definitions (-Wall -pedantic -std=gnu++11)
 else ()
 	message ("Unknown compiler")
 endif ()
 
-set (HEADERS ../helper.h)
-set (SOURCES ../main.cpp)
+set (HEADERS ./calculations/calc_manager.h 
+			 ./calculations/helper.h
+			 ./calculations/array.h
+			 ./calculations/matrix.h
+			 ./calculations/curve.h
+			 ./calculations/discretization.h
+			 ./calculations/incident_field.h
+			 ./calculations/equation_matrix_solver.h
+	)
+set (SOURCES ./main.cpp)
 
 source_group ("Header Files" FILES ${HEADERS})
 source_group ("Source Files" FILES ${SOURCES})

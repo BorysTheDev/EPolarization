@@ -1,35 +1,38 @@
 #include <iostream>
 #include "helper.h"
+#include "equation_matrix_solver.h"
+#include <memory>
+#include "matrix.h"
+#include "array.h"
+#include "curve.h"
+#include "incident_field.h"
+#include <vector>
+#include "discretization.h"
+//#include <complex>
 
-#include <complex>
 int main() {
-	const int n = 10;
-	complex** matrix = new complex*[n];
-	for (int i = 0; i < n; i++) {
-		matrix[i] = new complex[n];
-		for (int j = 0; j < n; j++) {
-			matrix[i][j] = (PI / n)
-					* (K(t_(n, i), t_(n, j))
-							+ complex(0, 2 * Ln(t_(n, i), t_(n, j), n) / PI));
-		}
+	const double k = M_PI;
+	double alpha = M_PI / 2;
+	const int n = 10;//round(k/M_PI) * 10;
 
-	}
-	complex* f = new complex[n];
+	Curve<double> curve;
+	std::vector<Curve<double>*> curves;
+	curves.push_back(&curve);
+
+	EPolarizationField<double> field(k, alpha);
+	IncidentFieldPackage<double> fields(1, k);
+	fields.setIncidentField(0, field);
+
+	Discretization<double> d(curves, fields);
+	EquationMatrixSolver<double> ems;
+
+	d.createArray();
+	std::shared_ptr<Array<std::complex<double>>> x = ems(d.createMatrix(), d.createArray());
+
 	for (int i = 0; i < n; i++) {
-		f[i] = complex(0, 2) * u0(t_(n, i));
+		std::cout << (*x)[i] << std::endl;
 	}
 
-	simpleLU(matrix, n);
-	complex* x = reverseStroke(matrix, f, n);
-	for (int i = 0; i < n; i++) {
-		std::cout << x[i] << std::endl;
-	}
-
-	delete[] x;
-	delete[] f;
-	for (int i = 0; i < n; i++)
-		delete[] matrix[i];
-	delete[] matrix;
 
 	return 0;
 }

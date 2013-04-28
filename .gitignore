@@ -12,5 +12,12 @@
 *.la
 *.a
 
-! build/CMakeLists.txt
-build/
+*.exe
+
+CMakeFiles/
+.cproject
+.project
+.settings/
+cmake_install.cmake
+CMakeCache.txt
+Makefile
