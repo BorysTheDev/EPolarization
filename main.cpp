@@ -13,7 +13,7 @@
 int main() {
 	const double k = M_PI;
 	double alpha = M_PI / 2;
-	const int n = 10;//round(k/M_PI) * 10;
+	//const int n = round(k/M_PI) * 100;
 
 	Curve<double> curve;
 	std::vector<Curve<double>*> curves;
@@ -24,12 +24,12 @@ int main() {
 	fields.setIncidentField(0, field);
 
 	Discretization<double> d(curves, fields);
-	EquationMatrixSolver<double> ems;
+	EquationMatrixSolver<std::complex<double>> ems;
 
 	d.createArray();
 	std::shared_ptr<Array<std::complex<double>>> x = ems(d.createMatrix(), d.createArray());
 
-	for (int i = 0; i < n; i++) {
+	for (size_t i = 0; i < x->size(); i++) {
 		std::cout << (*x)[i] << std::endl;
 	}
 

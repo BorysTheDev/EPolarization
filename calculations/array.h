@@ -43,4 +43,16 @@ void Array<T>::init(size_t size_, T* array_){
 	}
 }
 
+template<typename T>
+using ArrayPtr = std::shared_ptr<Array<T>>;
+
+template<typename T>
+using CArray = Array<std::complex<T>>;
+template<typename T>
+using CArrayPtr = std::shared_ptr<CArray<T>>;
+
+typedef CArray<double> DCArray;
+typedef std::shared_ptr<DCArray> DCArrayPtr;
+
+
 #endif /* ARRAY_H_ */
