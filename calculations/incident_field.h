@@ -31,41 +31,6 @@ public:
 	N operator()(T x1, T x2)const;
 };
 
-template<class T, class N = std::complex<T>>
-class IncidentFieldPackage {
-public:
-	typedef std::vector<const IncidentField<T, N>*> IncidentFields;
-	//constructors
-	IncidentFieldPackage(T waveNumber) : waveNumber_(waveNumber) {}
-	//functions
-	size_t size() {return fields.size();}
-	template<class Field> void addIncidentField(const Field wave);
-	const IncidentField<T, N>& operator[](const size_t n)const {return *fields[n];}
-	T waveNumber()const {return waveNumber_;}
-	//destructor
-	~IncidentFieldPackage();
-
-private:
-	IncidentFields fields;
-	T waveNumber_;
-	//this function have not to be used
-	IncidentFieldPackage(const IncidentFieldPackage<T, N>&){}
-	const IncidentFieldPackage& operator=(const IncidentFieldPackage<T, N>& f){return f;}
-};
-
-template<class T, class N>
-template<class Field>
-void IncidentFieldPackage<T, N>::addIncidentField(const Field wave){
-	if (wave.waveNumber() != waveNumber_) throw std::exception();
-	fields.push_back(new decltype(wave)(wave));
-}
-
-template<class T, class N>
-IncidentFieldPackage<T, N>::~IncidentFieldPackage(){
-	for (size_t i = 0; i < fields.size(); i++){
-		delete fields[i];
-	}
-}
 
 template<class T, class N>
 N EPolarizationField<T, N>::operator()(T x1, T x2)const {

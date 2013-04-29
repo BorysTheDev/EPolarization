@@ -5,6 +5,7 @@
 #include "matrix.h"
 #include "helper.h"
 #include "incident_field.h"
+#include "incident_field_package.h"
 
 template<class T, class N = std::complex<T>>
 class Discretization {

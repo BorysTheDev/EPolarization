@@ -8,6 +8,7 @@
 #include "incident_field.h"
 #include <vector>
 #include "discretization.h"
+#include "incident_field_package.h"
 //#include <complex>
 
 int main() {

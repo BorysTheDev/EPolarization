@@ -31,6 +31,7 @@ set (HEADERS ./calculations/calc_manager.h
 			 ./calculations/curve.h
 			 ./calculations/discretization.h
 			 ./calculations/incident_field.h
+			 ./calculations/incident_field_package.h
 			 ./calculations/equation_matrix_solver.h
 	)
 set (SOURCES ./main.cpp)
