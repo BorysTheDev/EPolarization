@@ -27,7 +27,7 @@ int main() {
 	EquationMatrixSolver<std::complex<double>> ems;
 
 	d.createArray();
-	std::shared_ptr<Array<std::complex<double>>> x = ems(d.createMatrix(), d.createArray());
+	CArrayPtr<double> x = ems(*d.createMatrix(), *d.createArray());
 
 	for (size_t i = 0; i < x->size(); i++) {
 		std::cout << (*x)[i] << std::endl;

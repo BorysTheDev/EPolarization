@@ -2,6 +2,7 @@
 #define DISCRETIZATION_H_
 #include "curve.h"
 #include <vector>
+#include "matrix.h"
 #include "helper.h"
 #include "incident_field.h"
 
@@ -17,26 +18,25 @@ public:
 		this->curves = curves;
 	}
 
-	Matrix<N> createMatrix() {
-		Matrix<N> matrix(size);
+	MatrixPtr<N> createMatrix() {
+		Matrix<N>* matrix = new Matrix<N>(size);
 			for (size_t i = 0; i < size; i++) {
 				for (size_t j = 0; j < size; j++) {
-					matrix[i][j] = (M_PI / size) * (K(t_(size, i), t_(size, j))
+					(*matrix)[i][j] = (M_PI / size) * (K(t_(size, i), t_(size, j))
 						+ N(0, 2 * Ln(t_(size, i), t_(size, j), size) / M_PI));
 				}
 			}
-			return matrix;
+			return MatrixPtr<N>(matrix);
 	}
 
 	//TODO
-	Array<N> createArray() {
-		Array<N> f(size);
+	ArrayPtr<N> createArray() {
+		Array<N>* f = new Array<N>(size);
 		for (size_t i = 0; i < size; i++) {
-			double xx1 = curves[0]->x1(t_(size, i));
-			double xx2 = curves[0]->x2(t_(size, i));
-			f[i] = N(0, 2) * fields[0](xx1, xx2);
+			(*f)[i] = N(0, 2) * fields[0](curves[0]->x1(t_(size, i)),
+					curves[0]->x2(t_(size, i)));
 		}
-		return f;
+		return ArrayPtr<N>(f);
 	}
 
 private:

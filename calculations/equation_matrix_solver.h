@@ -9,7 +9,7 @@
 template<typename N>
 class EquationMatrixSolver {
 public:
-	ArrayPtr<N> operator()(Matrix<N> matrix, const Array<N> f){
+	ArrayPtr<N> operator()(Matrix<N> matrix, const Array<N>& f){
 		LU(matrix);
 		return reverseStroke(matrix, f);
 	}

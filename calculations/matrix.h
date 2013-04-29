@@ -73,13 +73,4 @@ Matrix<T>& Matrix<T>::operator=(const Matrix &m){
 	return *this;
 }
 
-template<typename T>
-using CMatrix = Matrix<std::complex<T>>;
-
-typedef CMatrix<double> DCMatrix;
-typedef std::shared_ptr<DCMatrix> DCMatrixPtr;
-
-//template<typename T>
-//using CMatrix = Matrix<complex<T>>;
-
 #endif /* MATRIX_H_ */
