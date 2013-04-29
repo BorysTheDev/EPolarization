@@ -9,10 +9,11 @@
 #include <vector>
 #include "discretization.h"
 #include "incident_field_package.h"
+#include "timer.h"
 //#include <complex>
 
 int main() {
-	const double k = M_PI;
+	const double k = M_PI * 10;
 	double alpha = M_PI / 2;
 	//const int n = round(k/M_PI) * 100;
 
@@ -28,7 +29,11 @@ int main() {
 	EquationMatrixSolver<std::complex<double>> ems;
 
 	d.createArray();
+	Timer timer;
+	timer.start();
 	CArrayPtr<double> x = ems(*d.createMatrix(), *d.createArray());
+	timer.stop();
+	std::cout << timer.interval()<<std::endl;
 
 	for (size_t i = 0; i < x->size(); i++) {
 		std::cout << (*x)[i] << std::endl;
