@@ -39,21 +39,33 @@ public:
 			fields(size), waveNumber_(waveNumber) {}
 	//functions
 	size_t size() {return fields.size();}
-	template<class undefIncidentField>
-	void setIncidentField(size_t pos, undefIncidentField wave);
+	template<class Field> void setIncidentField(size_t pos, Field wave);
 	const IncidentField<T, N>& operator[](const size_t n)const {return *fields[n];}
-	T waveNumber() {return waveNumber_;}
+	T waveNumber()const {return waveNumber_;}
+	//destructor
+	~IncidentFieldPackage();
+
 private:
 	IncidentFields fields;
 	T waveNumber_;
+	//this function have not to be used
+	IncidentFieldPackage(const IncidentFieldPackage<T, N>&){}
+	const IncidentFieldPackage& operator=(const IncidentFieldPackage<T, N>& f){return f;}
 };
 
 template<class T, class N>
-template<class undefIncidentField>
-void IncidentFieldPackage<T, N>::setIncidentField(size_t pos, undefIncidentField wave){
+template<class Field>
+void IncidentFieldPackage<T, N>::setIncidentField(size_t pos, Field wave){
 	if (wave.waveNumber() != waveNumber_ || pos < 0 || pos > size())
 		throw std::exception();
 	fields[pos] = new decltype(wave)(wave);
+}
+
+template<class T, class N>
+IncidentFieldPackage<T, N>::~IncidentFieldPackage(){
+	for (size_t i = 0; i < fields.size(); i++){
+		if (fields[i]) delete fields[i];
+	}
 }
 
 template<class T, class N>

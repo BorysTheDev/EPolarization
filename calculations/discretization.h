@@ -10,10 +10,10 @@ class Discretization {
 	typedef IncidentFieldPackage<T> IncidentFieldsList;
 	typedef std::vector<Curve<T>*> CurvesList;
 public:
-	Discretization(CurvesList curves, IncidentFieldsList fields):fields(fields)
+	Discretization(CurvesList curves, const IncidentFieldsList& fields):fields(fields)
 	{
 		waveNumber = fields.waveNumber();
-		size= round(waveNumber/M_PI) * 200;
+		size= round(waveNumber/M_PI) * 10;
 		this->curves = curves;
 	}
 
@@ -44,7 +44,7 @@ private:
 	T waveNumber;
 
 	CurvesList curves;
-	IncidentFieldsList fields;
+	const IncidentFieldsList& fields;
 
 	//TODO
 	N K(const double& t, const double& tau_) {
