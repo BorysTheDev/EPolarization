@@ -20,8 +20,8 @@ int main() {
 	curves.push_back(&curve);
 
 	EPolarizationField<double> field(k, alpha);
-	IncidentFieldPackage<double> fields(1, k);
-	fields.setIncidentField(0, field);
+	IncidentFieldPackage<double> fields(k);
+	fields.addIncidentField(field);
 
 	Discretization<double> d(curves, fields);
 	EquationMatrixSolver<std::complex<double>> ems;

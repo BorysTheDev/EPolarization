@@ -2,6 +2,7 @@
 #define INCIDENT_FIELD_H_
 #include "array.h"
 #include <exception>
+#include <vector>
 
 template<class T, class N = std::complex<T>>
 class IncidentField {
@@ -33,13 +34,12 @@ public:
 template<class T, class N = std::complex<T>>
 class IncidentFieldPackage {
 public:
-	typedef Array<IncidentField<T, N>*> IncidentFields;
+	typedef std::vector<const IncidentField<T, N>*> IncidentFields;
 	//constructors
-	IncidentFieldPackage(size_t size, T waveNumber) :
-			fields(size), waveNumber_(waveNumber) {}
+	IncidentFieldPackage(T waveNumber) : waveNumber_(waveNumber) {}
 	//functions
 	size_t size() {return fields.size();}
-	template<class Field> void setIncidentField(size_t pos, Field wave);
+	template<class Field> void addIncidentField(const Field wave);
 	const IncidentField<T, N>& operator[](const size_t n)const {return *fields[n];}
 	T waveNumber()const {return waveNumber_;}
 	//destructor
@@ -55,16 +55,15 @@ private:
 
 template<class T, class N>
 template<class Field>
-void IncidentFieldPackage<T, N>::setIncidentField(size_t pos, Field wave){
-	if (wave.waveNumber() != waveNumber_ || pos < 0 || pos > size())
-		throw std::exception();
-	fields[pos] = new decltype(wave)(wave);
+void IncidentFieldPackage<T, N>::addIncidentField(const Field wave){
+	if (wave.waveNumber() != waveNumber_) throw std::exception();
+	fields.push_back(new decltype(wave)(wave));
 }
 
 template<class T, class N>
 IncidentFieldPackage<T, N>::~IncidentFieldPackage(){
 	for (size_t i = 0; i < fields.size(); i++){
-		if (fields[i]) delete fields[i];
+		delete fields[i];
 	}
 }
 
