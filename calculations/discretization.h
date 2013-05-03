@@ -72,7 +72,7 @@ private:
 	}
 
 	N h1(const double& x) {
-		return N(_j0(x), y0(x));
+		return N(j0(x),y0(x));
 	}
 
 };
