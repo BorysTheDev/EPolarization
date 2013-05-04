@@ -1,6 +1,5 @@
 #ifndef INCIDENT_FIELD_PACKAGE_H_
 #define INCIDENT_FIELD_PACKAGE_H_
-#include <stdexcept>
 #include "incident_field.h"
 
 template<class T, class N = std::complex<T>>
@@ -23,10 +22,9 @@ private:
 	T waveNumber_;
 	size_t filled;
 	//this function have not to be used
-	IncidentFieldPackage(const IncidentFieldPackage<T, N>&)
-		{throw std::logic_error("prohibited function in IncidentFieldPackage");}
-	const IncidentFieldPackage& operator=(const IncidentFieldPackage<T, N>& f)
-		{throw std::logic_error("prohibited function in IncidentFieldPackage");}
+	typedef IncidentFieldPackage<T, N> fPack;
+	IncidentFieldPackage(const fPack&) = delete;
+	const fPack& operator= (const fPack& f) = delete;
 };
 
 template<class T, class N>
@@ -39,7 +37,7 @@ void IncidentFieldPackage<T, N>::addIncidentField(const Field wave){
 template<class T, class N>
 IncidentFieldPackage<T, N>::~IncidentFieldPackage(){
 	for (size_t i = 0; i < fields.size(); i++){
-		delete fields[i];
+		if (fields[i]) delete fields[i];
 	}
 }
 

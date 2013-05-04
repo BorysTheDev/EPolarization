@@ -28,7 +28,7 @@ public:
 	EPolarizationField(T waveNumber, T alpha) :
 			IncidentField<T>(waveNumber, alpha) {}
 	//function
-	N operator()(T x1, T x2)const;
+	N operator()(T x1, T x2)const override;
 };
 
 
