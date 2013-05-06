@@ -8,26 +8,26 @@
 
 
 template<typename T>
-using MatrixPtr = std::unique_ptr<Matrix<T>>;
+using MatrixPtr = std::shared_ptr<Matrix<T>>;
 
 template<typename T>
 using CMatrix = Matrix<std::complex<T>>;
 template<typename T>
-using CMatrixPtr = std::unique_ptr<CMatrix<T>>;
+using CMatrixPtr = std::shared_ptr<CMatrix<T>>;
 
 typedef CMatrix<double> DCMatrix;
-typedef std::unique_ptr<DCMatrix> DCMatrixPtr;
+typedef std::shared_ptr<DCMatrix> DCMatrixPtr;
 
 template<typename T>
-using ArrayPtr = std::unique_ptr<Array<T>>;
+using ArrayPtr = std::shared_ptr<Array<T>>;
 
 template<typename T>
 using CArray = Array<std::complex<T>>;
 template<typename T>
-using CArrayPtr = std::unique_ptr<CArray<T>>;
+using CArrayPtr = std::shared_ptr<CArray<T>>;
 
 typedef CArray<double> DCArray;
-typedef std::unique_ptr<DCArray> DCArrayPtr;
+typedef std::shared_ptr<DCArray> DCArrayPtr;
 
 const double epsilant = 0.000001;
 
