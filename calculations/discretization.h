@@ -58,13 +58,9 @@ private:
 	double Ln(const double t0, double const t_,const int n) {
 		double sum = 0;
 		for (int p = 1; p < n; p++) {
-			sum += chebyshevcalculate(p, t_) * chebyshevcalculate(p, t0) / p;
+			sum += ch1(p, t_) * ch1(p, t0) / p;
 		}
 		return -(log(2) + 2 * sum);
-	}
-
-	double chebyshevcalculate(int n, double x){
-		return cos(n * acos(x));
 	}
 
 	double t_(const int n, const int i){

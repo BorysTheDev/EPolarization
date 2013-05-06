@@ -31,5 +31,9 @@ typedef std::shared_ptr<DCArray> DCArrayPtr;
 
 const double epsilant = 0.000001;
 
+//Chebyshev polynom of first kind
+double ch1(int n, double x){
+	return cos(n * acos(x));
+}
 
 #endif /* HELPER_H_ */
