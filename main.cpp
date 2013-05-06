@@ -17,7 +17,7 @@ int main() {
 	double alpha = M_PI / 2;
 	//const int n = round(k/M_PI) * 100;
 
-	Curve<double> curve;
+	Parabola<double> curve;
 	std::vector<Curve<double>*> curves;
 	curves.push_back(&curve);
 
