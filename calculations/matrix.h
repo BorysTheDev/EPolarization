@@ -7,12 +7,13 @@ class Matrix{
 public:
 	typedef T ElementType;
 	//functions
-	inline size_t width()const {return width_;}
-	inline size_t height()const {return height_;}
+	inline size_t width() const {return width_;}
+	inline size_t height() const {return height_;}
 	//operators
 	inline T& operator()(size_t h, size_t w) {return matrix[h][w];}
 	inline Matrix& operator=(const Matrix &m);
 	inline T* operator[](size_t h) {return matrix[h];}
+	inline const T* operator[](size_t h) const {return matrix[h];}
 	//constructors
 	Matrix():width_(0),height_(0) {matrix = nullptr;}
 	explicit Matrix(size_t size) {initMatrix(size, size);}
