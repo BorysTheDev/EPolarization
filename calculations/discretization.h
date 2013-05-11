@@ -34,8 +34,8 @@ public:
 	ArrayPtr<N> createArray() {
 		Array<N>* f = new Array<N>(size);
 		for (size_t i = 0; i < size; i++) {
-			(*f)[i] = N(0, 2) * fields[0](curves[0]->x1(t_(size, i)),
-					curves[0]->x2(t_(size, i)));
+			(*f)[i] = N(0, 2) * fields[0](curves[0]->x(t_(size, i)),
+					curves[0]->y(t_(size, i)));
 		}
 		return ArrayPtr<N>(f);
 	}
@@ -50,8 +50,8 @@ private:
 	//TODO
 	N K(const double& t, const double& tau_) {
 		double tau = t == tau_ ? tau_ + epsilant : tau_;
-		double sqrtArg = pow(curves[0]->x1(t) - curves[0]->x1(tau), 2)
-				+ pow(curves[0]->x2(t) - curves[0]->x2(tau), 2);
+		double sqrtArg = pow(curves[0]->x(t) - curves[0]->x(tau), 2)
+				+ pow(curves[0]->y(t) - curves[0]->y(tau), 2);
 		return h1(waveNumber * sqrt(sqrtArg)) - N(0, 2 * log(fabs(t - tau)) / M_PI);
 	}
 

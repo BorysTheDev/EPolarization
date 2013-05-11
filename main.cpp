@@ -14,12 +14,12 @@
 
 int main() {
 	const double k = M_PI * 10;
-	double alpha = M_PI / 2;
+	double alpha = 3*M_PI / 2;
 	//const int n = round(k/M_PI) * 100;
 
-	Curve<double> curve;
+	Line<double> line({-1,0},{1,0});
 	std::vector<Curve<double>*> curves;
-	curves.push_back(&curve);
+	curves.push_back(&line);
 
 	EPolarizationField<double> field(k, alpha);
 	IncidentFieldPackage<double> fields(k);

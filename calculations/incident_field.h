@@ -34,7 +34,7 @@ public:
 
 template<class T, class N>
 N EPolarizationField<T, N>::operator()(T x1, T x2)const {
-	T expArg = (x1 * cos(this->alpha_) - x2 * sin(this->alpha_))
+	T expArg = (x1 * cos(this->alpha_) + x2 * sin(this->alpha_))
 			* this->waveNumber_;
 	return (-2.0) * exp(N(0, expArg));
 }
