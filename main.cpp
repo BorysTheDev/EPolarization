@@ -13,19 +13,27 @@
 //#include <complex>
 
 int main() {
-	const double k = M_PI * 10;
-	double alpha = M_PI / 2;
+	const double k = M_PI;
+	double alpha = 3*M_PI / 2;
 	//const int n = round(k/M_PI) * 100;
-
-	Parabola<double> curve;
+	Line<double> line({-1,0},{1,0});
 	std::vector<Curve<double>*> curves;
-	curves.push_back(&curve);
+	curves.push_back(&line);
 
 	EPolarizationField<double> field(k, alpha);
 	IncidentFieldPackage<double> fields(k);
 	fields.addIncidentField(field);
 
 	Discretization<double> d(curves, fields);
+
+	const int n = round(k/M_PI) * 10;
+
+	std::cout << "Vector x(t_i):" <<std::endl;
+	for (int i = 0; i < n; i++) {
+				std::cout << curves[0]->x(d.t_(n,i)) << std::endl;
+	 		}
+
+
 	EquationMatrixSolver<std::complex<double>> ems;
 
 	d.createArray();
@@ -33,11 +41,20 @@ int main() {
 	timer.start();
 	CArrayPtr<double> x = ems(*d.createMatrix(), *d.createArray());
 	timer.stop();
+	std::cout << "calculation time:" <<std::endl;
 	std::cout << timer.interval()<<std::endl;
 
 	for (size_t i = 0; i < x->size(); i++) {
 		std::cout << (*x)[i] << std::endl;
 	}
+
+	CArrayPtr<double> b = d.createArray();
+
+	std::cout << "the right side of the matrix equation:" <<std::endl;
+	for (size_t i = 0; i < b->size(); i++) {
+			std::cout << (*b)[i] << std::endl;
+		}
+
 
 
 	return 0;
