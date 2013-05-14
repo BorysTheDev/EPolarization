@@ -1,6 +1,7 @@
 #ifndef INCIDENT_FIELD_PACKAGE_H_
 #define INCIDENT_FIELD_PACKAGE_H_
 #include "incident_field.h"
+#include <stdexcept>
 
 template<class T, class N = std::complex<T>>
 class IncidentFieldPackage {
@@ -11,7 +12,7 @@ public:
 		 fields(size), waveNumber_(waveNumber), filled(0) {}
 	//functions
 	size_t size() {return fields.size();}
-	template<class Field> void addIncidentField(const Field wave);
+	void addIncidentField(const IncidentField<T, N>& wave);
 	const IncidentField<T, N>& operator[](const size_t n)const {return *fields[n];}
 	T waveNumber()const {return waveNumber_;}
 	//destructor
@@ -28,10 +29,10 @@ private:
 };
 
 template<class T, class N>
-template<class Field>
-void IncidentFieldPackage<T, N>::addIncidentField(const Field wave){
-	if (wave.waveNumber() != waveNumber_) throw std::exception();
-	fields[filled++] = new decltype(wave)(wave);
+void IncidentFieldPackage<T, N>::addIncidentField(const IncidentField<T, N>& wave){
+	if (wave.waveNumber() != waveNumber_)
+		throw std::logic_error("not correct wave number");
+	fields[filled++] = wave.clone();
 }
 
 template<class T, class N>

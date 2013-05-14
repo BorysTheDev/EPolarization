@@ -1,21 +1,25 @@
 #ifndef INCIDENT_FIELD_H_
 #define INCIDENT_FIELD_H_
 #include "array.h"
-#include <exception>
 #include <vector>
 
 template<class T, class N = std::complex<T>>
 class IncidentField {
 public:
-	//concstructor
+	//constructor
 	IncidentField(T waveNumber, T alpha):
 			waveNumber_(waveNumber), alpha_(alpha) {}
+
 	//functions
 	virtual N operator()(T x1, T x2) const = 0;
+
+	virtual IncidentField* clone() const = 0;
+
 	T waveNumber()const {return waveNumber_;}
+
 	//destructor
-	virtual ~IncidentField() {
-	}
+	virtual ~IncidentField() = default;
+
 protected:
 	T waveNumber_;
 	T alpha_;
@@ -27,8 +31,12 @@ public:
 	//constructor
 	EPolarizationField(T waveNumber, T alpha) :
 			IncidentField<T>(waveNumber, alpha) {}
-	//function
+
+	//functions
 	N operator()(T x1, T x2)const override;
+
+	EPolarizationField* clone() const override {
+		return new EPolarizationField(this->waveNumber_, this->alpha_);}
 };
 
 
