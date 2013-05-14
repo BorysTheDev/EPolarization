@@ -31,9 +31,21 @@ typedef std::shared_ptr<DCArray> DCArrayPtr;
 
 const double epsilant = 0.000001;
 
-//Chebyshev polynom of first kind
-double ch1(int n, double x){
+//1st kind Chebyshev polynom
+template<class T = double>
+T ch1(int n, const T& x){
 	return cos(n * acos(x));
+}
+
+//1st kind Chebyshev nodes
+double ch1Nodes(const int n, const int i){
+	return cos((2.0 * i + 1.0) * M_PI / (2.0 * n));
+}
+
+//2nd kind Hankel function
+template<class T = double, class Complex = std::complex<T>>
+Complex h2(const T& x) {
+	return Complex(j0(x),-y0(x));
 }
 
 #endif /* HELPER_H_ */

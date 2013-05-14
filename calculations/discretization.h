@@ -23,8 +23,8 @@ public:
 		Matrix<N>* matrix = new Matrix<N>(size);
 		for (size_t i = 0; i < size; i++) {
 			for (size_t j = 0; j < size; j++) {
-				(*matrix)[i][j] = (M_PI / size) * (K(t_(size, i), t_(size, j))
-					- N(0, 2 * Ln(t_(size, i), t_(size, j), size) / M_PI));
+				(*matrix)[i][j] = (M_PI / size) * (K(ch1Nodes(size, i), ch1Nodes(size, j))
+					- N(0, 2 * Ln(ch1Nodes(size, i), ch1Nodes(size, j), size) / M_PI));
 			}
 		}
 		return MatrixPtr<N>(matrix);
@@ -34,13 +34,11 @@ public:
 	ArrayPtr<N> createArray() {
 		Array<N>* f = new Array<N>(size);
 		for (size_t i = 0; i < size; i++) {
-			(*f)[i] = -fields[0](curves[0]->x(t_(size, i)),
-					curves[0]->y(t_(size, i)));
+			(*f)[i] = -fields[0](curves[0]->x(ch1Nodes(size, i)),
+					curves[0]->y(ch1Nodes(size, i)));
 		}
 		return ArrayPtr<N>(f);
 	}
-
-
 
 private:
 	size_t size;
@@ -63,15 +61,6 @@ private:
 			sum += ch1(p, t_) * ch1(p, t0) / p;
 		}
 		return -(log(2) + 2 * sum);
-	}
-
-	double t_(const int n, const int i){
-		return cos((2.0 * i + 1.0) * M_PI / (2.0 * n));
-	}
-
-
-	N h2(const double& x) {
-		return N(j0(x),-y0(x));
 	}
 
 };

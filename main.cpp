@@ -13,9 +13,10 @@
 //#include <complex>
 
 int main() {
-	const double k = M_PI;
+	const double k = 5 * M_PI;
 	double alpha = 3*M_PI / 2;
 	//const int n = round(k/M_PI) * 100;
+
 	Line<double> line({-1,0},{1,0});
 	std::vector<Curve<double>*> curves;
 	curves.push_back(&line);
@@ -26,13 +27,7 @@ int main() {
 
 	Discretization<double> d(curves, fields);
 
-	const int n = round(k/M_PI) * 10;
-
 	std::cout << "Vector x(t_i):" <<std::endl;
-	for (int i = 0; i < n; i++) {
-				std::cout << curves[0]->x(d.t_(n,i)) << std::endl;
-	 		}
-
 
 	EquationMatrixSolver<std::complex<double>> ems;
 
