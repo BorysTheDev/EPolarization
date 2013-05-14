@@ -9,6 +9,7 @@
 #include <vector>
 #include "discretization.h"
 #include "incident_field_package.h"
+#include "curve_package.h"
 #include "timer.h"
 //#include <complex>
 
@@ -18,8 +19,8 @@ int main() {
 	//const int n = round(k/M_PI) * 100;
 
 	Line<double> line({-1,0},{1,0});
-	std::vector<Curve<double>*> curves;
-	curves.push_back(&line);
+	CurvePackage<double> curves;
+	curves.addCurve(line);
 
 	EPolarizationField<double> field(k, alpha);
 	IncidentFieldPackage<double> fields(k);

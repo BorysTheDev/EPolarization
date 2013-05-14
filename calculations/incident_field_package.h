@@ -8,8 +8,9 @@ class IncidentFieldPackage {
 public:
 	typedef Array<const IncidentField<T, N>*> IncidentFields;
 	//constructors
-	IncidentFieldPackage(T waveNumber, size_t size = 1) :
+	explicit IncidentFieldPackage(T waveNumber, size_t size = 1) :
 		 fields(size), waveNumber_(waveNumber), filled(0) {}
+
 	//functions
 	size_t size() {return fields.size();}
 	void addIncidentField(const IncidentField<T, N>& wave);

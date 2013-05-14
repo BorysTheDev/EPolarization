@@ -6,17 +6,18 @@
 #include "helper.h"
 #include "incident_field.h"
 #include "incident_field_package.h"
+#include "curve_package.h"
 
 template<class T, class N = std::complex<T>>
 class Discretization {
 	typedef IncidentFieldPackage<T> IncidentFieldsList;
-	typedef std::vector<Curve<T>*> CurvesList;
+	typedef CurvePackage<T> CurvesList;
 public:
-	Discretization(CurvesList curves, const IncidentFieldsList& fields):fields(fields)
+	Discretization(const CurvesList& curves, const IncidentFieldsList& fields):
+		curves(curves), fields(fields)
 	{
 		waveNumber = fields.waveNumber();
 		size= round(waveNumber/M_PI) * 10;
-		this->curves = curves;
 	}
 
 	MatrixPtr<N> createMatrix() {
@@ -34,8 +35,8 @@ public:
 	ArrayPtr<N> createArray() {
 		Array<N>* f = new Array<N>(size);
 		for (size_t i = 0; i < size; i++) {
-			(*f)[i] = -fields[0](curves[0]->x(ch1Nodes(size, i)),
-					curves[0]->y(ch1Nodes(size, i)));
+			(*f)[i] = -fields[0](curves[0].x(ch1Nodes(size, i)),
+					curves[0].y(ch1Nodes(size, i)));
 		}
 		return ArrayPtr<N>(f);
 	}
@@ -44,14 +45,14 @@ private:
 	size_t size;
 	T waveNumber;
 
-	CurvesList curves;
+	const CurvesList& curves;
 	const IncidentFieldsList& fields;
 
 	//TODO
 	N K(const double& t, const double& tau_) {
 		double tau = t == tau_ ? tau_ + epsilant : tau_;
-		double sqrtArg = pow(curves[0]->x(t) - curves[0]->x(tau), 2)
-				+ pow(curves[0]->y(t) - curves[0]->y(tau), 2);
+		double sqrtArg = pow(curves[0].x(t) - curves[0].x(tau), 2)
+				+ pow(curves[0].y(t) - curves[0].y(tau), 2);
 		return h2(waveNumber * sqrt(sqrtArg)) + N(0, 2 * log(fabs(t - tau)) / M_PI);
 	}
 
