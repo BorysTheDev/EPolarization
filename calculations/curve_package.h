@@ -12,7 +12,7 @@ public:
 	explicit CurvePackage(size_t size = 1) : curves(size), filled(0) {}
 
 	//functions
-	size_t size() {return curves.size();}
+	size_t size() const {return curves.size();}
 
 	void addCurve(const Curve<T>& curve) {curves[filled++] = curve.clone();}
 

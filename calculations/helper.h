@@ -37,6 +37,11 @@ T ch1(int n, const T& x){
 	return cos(n * acos(x));
 }
 
+template<class T>
+T sqr(const T& base){
+	return base * base;
+}
+
 //1st kind Chebyshev nodes
 double ch1Nodes(const int n, const int i){
 	return cos((2.0 * i + 1.0) * M_PI / (2.0 * n));

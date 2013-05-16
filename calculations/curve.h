@@ -12,6 +12,8 @@ public:
 	virtual T dx(T t) const = 0;
 	virtual T dy(T t) const = 0;
 
+	virtual T length() const = 0;
+
 	virtual Curve* clone() const = 0;
 
 	virtual ~Curve() = default;
@@ -21,6 +23,14 @@ template<class T>
 class Line: public Curve<T> {
 public:
 	Line(const Point<T>& a, const Point<T>& b);
+
+	T x(T t) const override;
+	T y(T t) const override;
+	T dx(T t) const override {return cosPhi * len / 2;}
+	T dy(T t) const override {return sinPhi * len / 2;}
+
+	T length() const override {return len;}
+
 	Line<T>* clone() const override;
 
 private:
@@ -29,12 +39,6 @@ private:
 	T cosPhi;
 	T sinPhi;
 	T len;
-	T x(T t) const override;
-	T y(T t) const override;
-	T dx(T t) const override {return cosPhi * len / 2;}
-	T dy(T t) const override {return sinPhi * len / 2;}
-
-
 };
 
 template<class T>
@@ -48,13 +52,13 @@ Line<T>::Line(const Point<T>& a, const Point<T>& b): p1(a), p2(b){
 template<class T>
 T Line<T>::x(T t) const {     //given: parameter from -1 to 1
 	T t_ = len * (t+1)/2; // correspondence parameter t from 0 to len
-	return p1.x + t_*cosPhi;
+	return p1.x + t_ * cosPhi;
 }
 
 template<class T>
 T Line<T>::y(T t) const {     //given: parameter from -1 to 1
-	T t_ = len* (t+1)/2; // correspondence parameter t from 0 to len
-	return p1.y + t_*sinPhi;
+	T t_ = len * (t+1)/2; // correspondence parameter t from 0 to len
+	return p1.y + t_ * sinPhi;
 }
 
 template<class T>
