@@ -66,5 +66,78 @@ Line<T>* Line<T>::clone() const {
 	return new Line<T>(p1,p2);
 }
 
+template<class T>
+class Parabola: public Curve<T> {
+public:
+	Parabola(const T& x1, const T& x2, const T& p);
+
+	T x(T t) const override;
+	T y(T t) const override;
+	T dx(T t) const override;
+	T dy(T t) const override;
+
+	T length() const override;
+
+
+
+	Parabola<T>* clone() const override;
+
+private:
+	T x1;
+	T x2;
+	T p;
+	T lengthInt(T x) const;    //Int(sqrt(1+x^2)) which is used for parabola length calculation
+};
+
+template<class T>
+Parabola<T>::Parabola(const T& x1_, const T& x2_, const T& p_) {
+		x1=x1_;
+		x2=x2_;
+		p=p_;
+}
+
+template<class T>
+T Parabola<T>::x(T t) const {     //given: parameter from t -1 to 1
+	T t_ = x1*(1-t)/2 + x2 * (1+t)/2; // correspondence parameter t_ from x1 to x2
+	return t_;
+}
+
+template<class T>
+T Parabola<T>::y(T t) const {     //given: parameter from t -1 to 1
+	T t_ = x1*(1-t)/2 + x2 * (1+t)/2; // correspondence parameter t_ from x1 to x2
+	return 1/(2*p)*t_*t_;
+}
+
+template<class T>
+T Parabola<T>::dx(T t) const {     //given: parameter from t -1 to 1
+	return (x2-x1)/2;
+}
+
+
+template<class T>
+T Parabola<T>::dy(T t) const {     //given: parameter from t -1 to 1
+	T t_ = x1*(1-t)/2 + x2 * (1+t)/2; // correspondence parameter t_ from x1 to x2
+	return (t_/p)*(x2-x1)/2;
+}
+
+template<class T>
+T Parabola<T>::lengthInt(T x) const{
+	return 0.5 * (log(sqrt(1 + x * x) + x) + sqrt(1 + x * x) * x);
+}
+
+template<class T>
+T Parabola<T>::length() const {
+	return p*(lengthInt(x2/p) - lengthInt(x1/p));
+}
+
+
+template<class T>
+Parabola<T>* Parabola<T>::clone() const {
+	return new Parabola<T>(x1,x2,p);
+}
+
+
+
+
 #endif /* CURVE_H_ */
 

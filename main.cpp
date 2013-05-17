@@ -19,8 +19,9 @@ int main() {
 	//const int n = round(k/M_PI) * 100;
 
 	Line<double> line({-1,0},{1,0});
+	Parabola<double>* parabola = new Parabola<double>(-1,1,1);
 	CurvePackage<double> curves;
-	curves.addCurve(line);
+	curves.addCurve(*parabola);
 
 	EPolarizationField<double> field(k, alpha);
 	IncidentFieldPackage<double> fields(k);
