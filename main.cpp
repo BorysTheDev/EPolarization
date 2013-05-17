@@ -26,8 +26,6 @@ int main() {
 	//Line<double> line2({-1, -1}, {1, 1});
 	Line<double> line1({-1, 4},{1, 2});
 	Parabola<double> line2(-1,1,0.5);
-	for(double i = -1; i <= 1; i+=0.5)
-		std::cout << "parabola"<< line2.dx(i) << " " <<line2.dy(i);
 	CurvePackage<double> curves(2);
 	curves.addCurve(line1);
 	curves.addCurve(line2);
@@ -54,15 +52,6 @@ int main() {
 	for (size_t i = 0; i < x->size(); i++) {
 		std::cout << (*x)[i] << std::endl;
 	}
-
-	CArrayPtr<double> b = d.createArray();
-
-	std::cout << "the right side of the matrix equation:" <<std::endl;
-	for (size_t i = 0; i < b->size(); i++) {
-			std::cout << (*b)[i] << std::endl;
-		}
-
-
 
 	return 0;
 }

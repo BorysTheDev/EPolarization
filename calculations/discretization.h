@@ -14,75 +14,12 @@ class Discretization {
 	typedef IncidentFieldPackage<T> IncidentFieldsList;
 	typedef CurvePackage<T> CurvesList;
 	typedef Array<DiscretizeCurve<T>*> DiscretizeCurves;
-	//delete
-	int discSize;
+
 public:
-	Discretization(const CurvesList& sCurves, const IncidentFieldsList& fields) :
-			simpleCurves(sCurves), fields(fields), curves(sCurves.size()) {
-		waveNumber = fields.waveNumber();
-		discSize = round(waveNumber / M_PI) * 2;
-		size = curves.size() * discSize;
-		for (size_t i = 0; i < curves.size(); i++)
-			curves[i] = new DiscretizeCurve<T>(simpleCurves[i], discSize,
-					ch1Nodes);
-	}
+	Discretization(const CurvesList& sCurves, const IncidentFieldsList& fields);
 
-	MatrixPtr<N> createMatrix() {
-		Matrix<N>* matrix = new Matrix<N>(size);
-		size_t startI = 0;
-		for (size_t m = 0; m < curves.size(); m++) {
-			size_t endI = startI + curves[m]->size();
-			size_t startJ = 0;
-			for (size_t n = 0; n < curves.size(); n++) {
-				size_t endJ = startJ + curves[n]->size();
-				size_t i = startI;
-				if (m == n) {
-					for (size_t ii = 0; i < endI; i++, ii++) {
-						size_t j = startJ;
-						for (size_t jj = 0; j < endJ; j++, jj++) {
-							N temp = ii != jj ?
-									 kernel(curves[m]->x(ii), curves[m]->y(ii),
-											curves[n]->x(jj), curves[n]->y(jj))
-									 - asymp(curves[m]->p(ii), curves[n]->p(jj))
-									 : lim(curves[n]->dx(ii), curves[n]->dy(ii));
-							(*matrix)[i][j] = (M_PI / curves[n]->size()) *
-									(temp - N(0, 2)
-									* Ln(curves[m]->p(ii), curves[m]->p(jj),
-											curves[m]->size()) / M_PI);
-						}
-					}
-				} else {
-					for (size_t ii = 0; i < endI; i++, ii++) {
-						size_t j = startJ;
-						for (size_t jj = 0; j < endJ; j++, jj++) {
-							(*matrix)[i][j] = (M_PI / curves[n]->size())
-									* kernel(curves[m]->x(ii), curves[m]->y(ii),
-											curves[n]->x(jj), curves[n]->y(jj));
-						}
-					}
-				}
-				startJ = endJ;
-			}
-			startI = endI;
-		}
-		for (size_t i = 0; i < matrix->width(); i++) {
-			for (size_t j = 0; j < matrix->width(); j++)
-				std::cout << (*matrix)[i][j] << "  ";
-			std::cout << std::endl;
-		}
-		return MatrixPtr<N>(matrix);
-	}
-
-	//TODO
-	ArrayPtr<N> createArray() {
-		Array<N>* f = new Array<N>(size);
-		int ii = 0;
-		for (size_t i = 0; i < curves.size(); i++) {
-			for (size_t j = 0; j < curves[i]->size(); j++, ii++)
-				(*f)[ii] = -fields[0](curves[i]->x(j), curves[i]->y(j));
-		}
-		return ArrayPtr<N>(f);
-	}
+	MatrixPtr<N> createMatrix();
+	ArrayPtr<N> createArray();
 
 private:
 	size_t size;
@@ -92,29 +29,108 @@ private:
 	const IncidentFieldsList& fields;
 	DiscretizeCurves curves;
 
-	const double gamma = 0.57721566490153;
+	void fillAnotherMatrixBlock(Matrix<N>& matr, size_t startI, size_t startJ,
+			const DiscretizeCurve<T>& c1, const DiscretizeCurve<T>& c2);
 
-	inline N kernel(const T& x1, const T& x2, const T& y1, const T &y2) {
-		return h2(waveNumber * sqrt(sqr(x1 - y1) + sqr(x2 - y2)));
+	void fillMiddleMatrixBlock(Matrix<N>& matr, size_t startI,
+			const DiscretizeCurve<T>& c1);
+
+	//adapter for functions
+	N kernel(const DiscretizeCurve<T>& c, size_t i, size_t j) {
+		return epol::kernel(c.x(i), c.y(i), c.x(j), c.y(j), waveNumber);
 	}
 
-	inline N asymp(const T& t, const T& tau) {
-		return -(N(0, 2 * log(fabs(t - tau)) / M_PI));
+	//adapter for functions
+	N kernel(const DiscretizeCurve<T>& c1, size_t i,
+			const DiscretizeCurve<T>& c2, size_t j) {
+		return epol::kernel(c1.x(i), c1.y(i), c2.x(j), c2.y(j), waveNumber);
 	}
 
-	inline N lim(T dx, T dy) {
-		return -N(0, 2 / M_PI)
-				* (log(waveNumber * sqrt(sqr(dx) + sqr(dy)) / 2) - M_PI / N(0, 2) + gamma);
+	//adapter for functions
+	N asymp(const DiscretizeCurve<T>& curve, size_t i, size_t j) {
+		return epol::asymp(curve.p(i), curve.p(j));
 	}
 
-	double Ln(const double& t0, double const& t_, const int n) {
-		double sum = 0;
-		for (int p = 1; p < n; p++) {
-			sum += ch1(p, t_) * ch1(p, t0) / p;
-		}
-		return -(log(2) + 2 * sum);
+	//adapter for functions
+	N lim(const DiscretizeCurve<T>& curve, size_t i) {
+		return epol::lim(curve.dx(i), curve.dy(i), waveNumber);
 	}
 
+	//adapter for functions
+	N Ln(const DiscretizeCurve<T>& curve, size_t i, size_t j) {
+		return epol::Ln(curve.p(i), curve.p(j), curve.size());
+	}
 };
 
+template<class T, class N>
+Discretization<T, N>::Discretization(const CurvesList& sCurves,
+		const IncidentFieldsList& fields) :
+		simpleCurves(sCurves), fields(fields), curves(sCurves.size()) {
+	waveNumber = fields.waveNumber();
+	int discSize = round(waveNumber / M_PI) * 2;
+	size = curves.size() * discSize;
+	for (size_t i = 0; i < curves.size(); i++)
+		curves[i] = new DiscretizeCurve<T>(simpleCurves[i], discSize, ch1Nodes);
+}
+
+template<class T, class N>
+MatrixPtr<N> Discretization<T, N>::createMatrix() {
+	Matrix<N> *matrix = new Matrix<N>(size);
+	size_t startI = 0;
+	for (size_t m = 0; m < curves.size(); m++) {
+		size_t startJ = 0;
+		for (size_t n = 0; n < curves.size(); n++) {
+			if (m == n) {
+				fillMiddleMatrixBlock(*matrix, startI, *curves[n]);
+			} else {
+				fillAnotherMatrixBlock(*matrix, startI, startJ, *curves[m],
+						*curves[n]);
+			}
+			startJ += curves[n]->size();
+		}
+		startI += curves[m]->size();
+	}
+	return MatrixPtr<N>(matrix);
+}
+
+template<class T, class N>
+ArrayPtr<N> Discretization<T, N>::createArray() {
+	Array<N> *f = new Array<N>(size);
+	int ii = 0;
+	for (size_t i = 0; i < curves.size(); i++) {
+		for (size_t j = 0; j < curves[i]->size(); j++, ii++)
+			(*f)[ii] = -fields[0](curves[i]->x(j), curves[i]->y(j));
+	}
+	return ArrayPtr<N>(f);
+}
+
+template<class T, class N>
+void Discretization<T, N>::fillAnotherMatrixBlock(Matrix<N>& matr,
+		size_t startI, size_t startJ, const DiscretizeCurve<T>& c1,
+		const DiscretizeCurve<T>& c2) {
+	size_t i = startI;
+	for (size_t ii = 0; ii < c1.size(); i++, ii++) {
+		size_t j = startJ;
+		for (size_t jj = 0; jj < c2.size(); j++, jj++) {
+			matr[i][j] = (M_PI / c2.size()) * kernel(c1, ii, c2, jj);
+		}
+	}
+}
+
+template<class T, class N>
+void Discretization<T, N>::fillMiddleMatrixBlock(Matrix<N>& matr, size_t startI,
+		const DiscretizeCurve<T>& c1) {
+	size_t i = startI;
+	for (size_t ii = 0; ii < c1.size(); i++, ii++) {
+		size_t j = startI;
+		for (size_t jj = 0; jj < c1.size(); j++, jj++) {
+			N temp =
+					ii != jj ?
+							kernel(c1, ii, jj) - asymp(c1, ii, jj) :
+							lim(c1, ii);
+			matr[i][j] = (M_PI / c1.size())
+					* (temp - N(0, 2) * Ln(c1, ii, jj) / M_PI);
+		}
+	}
+}
 #endif /* DISCRETIZATION_H_ */
