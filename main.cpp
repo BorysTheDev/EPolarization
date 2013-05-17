@@ -15,13 +15,23 @@
 
 int main() {
 	const double k = 5 * M_PI;
-	double alpha = 3*M_PI / 2;
+	double alpha = 0;
 	//const int n = round(k/M_PI) * 100;
 
-	Line<double> line({-1,0},{1,0});
-	Parabola<double>* parabola = new Parabola<double>(-1,1,1);
-	CurvePackage<double> curves;
-	curves.addCurve(*parabola);
+	//Line<double> line({-1,0},{1,0});
+	//Parabola<double>* parabola = new Parabola<double>(-1,1,1);
+	//CurvePackage<double> curves;
+	//curves.addCurve(*parabola);
+
+	//Line<double> line2({-1, -1}, {1, 1});
+	Line<double> line1({-1, 4},{1, 2});
+	Parabola<double> line2(-1,1,0.5);
+	for(double i = -1; i <= 1; i+=0.5)
+		std::cout << "parabola"<< line2.dx(i) << " " <<line2.dy(i);
+	CurvePackage<double> curves(2);
+	curves.addCurve(line1);
+	curves.addCurve(line2);
+
 
 	EPolarizationField<double> field(k, alpha);
 	IncidentFieldPackage<double> fields(k);
