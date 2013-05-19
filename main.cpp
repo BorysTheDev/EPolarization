@@ -11,31 +11,29 @@
 #include "incident_field_package.h"
 #include "curve_package.h"
 #include "timer.h"
+#include "given.h"
 //#include <complex>
 
 int main() {
 	const double k = 5 * M_PI;
 	double alpha = 0;
-	//const int n = round(k/M_PI) * 100;
+	size_t curveNum = 3;
+	size_t fieldNum = 1;
+	CurvePackage<double> curves(curveNum);
+	Line<double> curve1({-1, 4},{1, 2});
+	Parabola<double> curve2(-1,1,0.5);
+	Line<double> curve3({-2, -1},{-2, 1});
 
-	//Line<double> line({-1,0},{1,0});
-	//Parabola<double>* parabola = new Parabola<double>(-1,1,1);
-	//CurvePackage<double> curves;
-	//curves.addCurve(*parabola);
+	curves.addCurve(curve1);
+	curves.addCurve(curve2);
+	curves.addCurve(curve3);
 
-	//Line<double> line2({-1, -1}, {1, 1});
-	Line<double> line1({-1, 4},{1, 2});
-	Parabola<double> line2(-1,1,0.5);
-	CurvePackage<double> curves(2);
-	curves.addCurve(line1);
-	curves.addCurve(line2);
-
-
+	IncidentFieldPackage<double> fields(k,fieldNum);
 	EPolarizationField<double> field(k, alpha);
-	IncidentFieldPackage<double> fields(k);
 	fields.addIncidentField(field);
 
-	Discretization<double> d(curves, fields);
+	Given<double> given(k, curves, fields);
+	Discretization<double> d(given.curves, given.fields,given.discretizionOrder);
 
 	std::cout << "Vector x(t_i):" <<std::endl;
 

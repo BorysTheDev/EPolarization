@@ -16,7 +16,8 @@ class Discretization {
 	typedef Array<DiscretizeCurve<T>*> DiscretizeCurves;
 
 public:
-	Discretization(const CurvesList& sCurves, const IncidentFieldsList& fields);
+	Discretization(const CurvesList& sCurves, const IncidentFieldsList& fields,
+			std:: vector<size_t> n );
 
 	MatrixPtr<N> createMatrix();
 	ArrayPtr<N> createArray();
@@ -32,7 +33,7 @@ private:
 	void fillAnotherMatrixBlock(Matrix<N>& matr, size_t startI, size_t startJ,
 			const DiscretizeCurve<T>& c1, const DiscretizeCurve<T>& c2);
 
-	void fillMiddleMatrixBlock(Matrix<N>& matr, size_t startI,
+	void fillDiagonalMatrixBlock(Matrix<N>& matr, size_t startI,
 			const DiscretizeCurve<T>& c1);
 
 	//adapter for functions
@@ -64,13 +65,14 @@ private:
 
 template<class T, class N>
 Discretization<T, N>::Discretization(const CurvesList& sCurves,
-		const IncidentFieldsList& fields) :
+		const IncidentFieldsList& fields, std:: vector<size_t> n) :
 		simpleCurves(sCurves), fields(fields), curves(sCurves.size()) {
 	waveNumber = fields.waveNumber();
-	int discSize = round(waveNumber / M_PI) * 2;
-	size = curves.size() * discSize;
-	for (size_t i = 0; i < curves.size(); i++)
-		curves[i] = new DiscretizeCurve<T>(simpleCurves[i], discSize, ch1Nodes);
+	size = 0;
+	for (size_t i = 0; i < curves.size(); i++){
+		curves[i] = new DiscretizeCurve<T>(simpleCurves[i], n[i], ch1Nodes);
+		size += n[i];
+	}
 }
 
 template<class T, class N>
@@ -81,7 +83,7 @@ MatrixPtr<N> Discretization<T, N>::createMatrix() {
 		size_t startJ = 0;
 		for (size_t n = 0; n < curves.size(); n++) {
 			if (m == n) {
-				fillMiddleMatrixBlock(*matrix, startI, *curves[n]);
+				fillDiagonalMatrixBlock(*matrix, startI, *curves[n]);
 			} else {
 				fillAnotherMatrixBlock(*matrix, startI, startJ, *curves[m],
 						*curves[n]);
@@ -118,7 +120,7 @@ void Discretization<T, N>::fillAnotherMatrixBlock(Matrix<N>& matr,
 }
 
 template<class T, class N>
-void Discretization<T, N>::fillMiddleMatrixBlock(Matrix<N>& matr, size_t startI,
+void Discretization<T, N>::fillDiagonalMatrixBlock(Matrix<N>& matr, size_t startI,
 		const DiscretizeCurve<T>& c1) {
 	size_t i = startI;
 	for (size_t ii = 0; ii < c1.size(); i++, ii++) {
