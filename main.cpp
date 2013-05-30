@@ -11,10 +11,11 @@
 #include "incident_field_package.h"
 #include "curve_package.h"
 #include "timer.h"
+#include "box.h"
 //#include <complex>
 
 int main() {
-	const double k = 5 * M_PI;
+	const double k = 50 * M_PI;
 	double alpha = 0;
 	//const int n = round(k/M_PI) * 100;
 
@@ -24,12 +25,15 @@ int main() {
 	//curves.addCurve(*parabola);
 
 	//Line<double> line2({-1, -1}, {1, 1});
-	Line<double> line1({-1, 4},{1, 2});
-	Parabola<double> line2(-1,1,0.5);
-	CurvePackage<double> curves(2);
-	curves.addCurve(line1);
-	curves.addCurve(line2);
-
+	//Line<double>* line1 = new Line<double>({-1, 4},{1, 2});
+	//Parabola<double>* line2 = new Parabola<double>(-1,1,0.5);
+	//CurvePackage<double> curves(2);
+	//curves.addCurve(line1);
+	//curves.addCurve(line2);
+	DonationBox<Curve<double>> listCurves;
+	listCurves << new Line<double>({-1, 4},{1, 2})
+			<< new Parabola<double>(-1,1,0.5);
+	BlackBox<Curve<double>> curves(listCurves);
 
 	EPolarizationField<double> field(k, alpha);
 	IncidentFieldPackage<double> fields(k);

@@ -8,11 +8,13 @@
 #include "incident_field_package.h"
 #include "curve_package.h"
 #include "discretize_curve.h"
+#include "box.h"
+#include "curve.h"
 
 template<class T, class N = std::complex<T>>
 class Discretization {
 	typedef IncidentFieldPackage<T> IncidentFieldsList;
-	typedef CurvePackage<T> CurvesList;
+	typedef BlackBox<Curve<T>> CurvesList;
 	typedef Array<DiscretizeCurve<T>*> DiscretizeCurves;
 
 public:
