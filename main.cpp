@@ -12,34 +12,30 @@
 #include "curve_package.h"
 #include "timer.h"
 #include "box.h"
+#include "discretize_curve.h"
 //#include <complex>
 
 int main() {
-	const double k = 50 * M_PI;
+	const double k = 5 * M_PI;
 	double alpha = 0;
 	//const int n = round(k/M_PI) * 100;
 
-	//Line<double> line({-1,0},{1,0});
-	//Parabola<double>* parabola = new Parabola<double>(-1,1,1);
-	//CurvePackage<double> curves;
-	//curves.addCurve(*parabola);
-
-	//Line<double> line2({-1, -1}, {1, 1});
-	//Line<double>* line1 = new Line<double>({-1, 4},{1, 2});
-	//Parabola<double>* line2 = new Parabola<double>(-1,1,0.5);
-	//CurvePackage<double> curves(2);
-	//curves.addCurve(line1);
-	//curves.addCurve(line2);
 	DonationBox<Curve<double>> listCurves;
-	listCurves << new Line<double>({-1, 4},{1, 2})
-			<< new Parabola<double>(-1,1,0.5);
-	BlackBox<Curve<double>> curves(listCurves);
+	listCurves << new Line<double>({-1, 4}, {1, 2})
+			<< new Parabola<double>(-1 ,1 , 0.5);
+	BlackBox<Curve<double>> curvesSimple(listCurves);
 
 	EPolarizationField<double> field(k, alpha);
 	IncidentFieldPackage<double> fields(k);
 	fields.addIncidentField(field);
 
-	Discretization<double> d(curves, fields);
+	DonationBox<DiscretizeCurve<double>> discCurves;
+	//int discSize = round(k / M_PI) * 2;
+	for (size_t i = 0; i < curvesSimple.size(); i++)
+		discCurves << new DiscretizeCurve<double>(curvesSimple[i], (i + 1) * 10, ch1Nodes);
+
+	//BlackBox<DiscretizeCurve<double>> curves(discCurves);
+	Discretization<double> d(discCurves, fields);
 
 	std::cout << "Vector x(t_i):" <<std::endl;
 
@@ -48,6 +44,7 @@ int main() {
 	d.createArray();
 	Timer timer;
 	timer.start();
+
 	CArrayPtr<double> x = ems(*d.createMatrix(), *d.createArray());
 	timer.stop();
 	std::cout << "calculation time:" <<std::endl;

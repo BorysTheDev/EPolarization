@@ -1,21 +1,17 @@
 #ifndef DISCRETIZATION_H_
 #define DISCRETIZATION_H_
-#include "curve.h"
 #include "array.h"
 #include "matrix.h"
 #include "helper.h"
 #include "incident_field.h"
 #include "incident_field_package.h"
-#include "curve_package.h"
 #include "discretize_curve.h"
 #include "box.h"
-#include "curve.h"
 
 template<class T, class N = std::complex<T>>
 class Discretization {
 	typedef IncidentFieldPackage<T> IncidentFieldsList;
-	typedef BlackBox<Curve<T>> CurvesList;
-	typedef Array<DiscretizeCurve<T>*> DiscretizeCurves;
+	typedef Box<DiscretizeCurve<T>> CurvesList;
 
 public:
 	Discretization(const CurvesList& sCurves, const IncidentFieldsList& fields);
@@ -27,9 +23,9 @@ private:
 	size_t size;
 	T waveNumber;
 
-	const CurvesList& simpleCurves;
+
 	const IncidentFieldsList& fields;
-	DiscretizeCurves curves;
+	const CurvesList& curves;
 
 	void fillAnotherMatrixBlock(Matrix<N>& matr, size_t startI, size_t startJ,
 			const DiscretizeCurve<T>& c1, const DiscretizeCurve<T>& c2);
@@ -66,13 +62,11 @@ private:
 
 template<class T, class N>
 Discretization<T, N>::Discretization(const CurvesList& sCurves,
-		const IncidentFieldsList& fields) :
-		simpleCurves(sCurves), fields(fields), curves(sCurves.size()) {
+		const IncidentFieldsList& fields) : fields(fields), curves(sCurves) {
 	waveNumber = fields.waveNumber();
-	int discSize = round(waveNumber / M_PI) * 2;
-	size = curves.size() * discSize;
-	for (size_t i = 0; i < curves.size(); i++)
-		curves[i] = new DiscretizeCurve<T>(simpleCurves[i], discSize, ch1Nodes);
+	size = 0;
+	for (size_t i =0; i < sCurves.size(); i++)
+		size += sCurves[i].size();
 }
 
 template<class T, class N>
@@ -83,14 +77,14 @@ MatrixPtr<N> Discretization<T, N>::createMatrix() {
 		size_t startJ = 0;
 		for (size_t n = 0; n < curves.size(); n++) {
 			if (m == n) {
-				fillMiddleMatrixBlock(*matrix, startI, *curves[n]);
+				fillMiddleMatrixBlock(*matrix, startI, curves[n]);
 			} else {
-				fillAnotherMatrixBlock(*matrix, startI, startJ, *curves[m],
-						*curves[n]);
+				fillAnotherMatrixBlock(*matrix, startI, startJ, curves[m],
+						curves[n]);
 			}
-			startJ += curves[n]->size();
+			startJ += curves[n].size();
 		}
-		startI += curves[m]->size();
+		startI += curves[m].size();
 	}
 	return MatrixPtr<N>(matrix);
 }
@@ -100,8 +94,8 @@ ArrayPtr<N> Discretization<T, N>::createArray() {
 	Array<N> *f = new Array<N>(size);
 	int ii = 0;
 	for (size_t i = 0; i < curves.size(); i++) {
-		for (size_t j = 0; j < curves[i]->size(); j++, ii++)
-			(*f)[ii] = -fields[0](curves[i]->x(j), curves[i]->y(j));
+		for (size_t j = 0; j < curves[i].size(); j++, ii++)
+			(*f)[ii] = -fields[0](curves[i].x(j), curves[i].y(j));
 	}
 	return ArrayPtr<N>(f);
 }

@@ -5,23 +5,30 @@
 #include <list>
 
 template<class T>
-class DonationBox {
+class Box {
 public:
-	//constructors
-	explicit DonationBox(){}
+	virtual size_t size() const = 0;
 
-	//functions
-	size_t size() const {
-		return data.size();
-	}
+	virtual const T& operator[](const size_t n) const = 0;
 
-	const T& operator[](const size_t n) const {
-		return *data[n];
-	}
+	virtual ~Box(){}
+protected:
+	Box(){}
+private:
+	Box(const Box&) = delete;
+	const Box& operator=(const Box& f) = delete;
+};
+
+template<class T>
+class DonationBox : public Box<T> {
+public:
+	DonationBox(){}
+	size_t size() const override { return data.size(); }
+
+	const T& operator[](const size_t n) const override { return *data[n]; }
 
 	DonationBox<T>& operator<<(T* donator);
 
-	//destructor
 	~DonationBox();
 
 private:
@@ -43,22 +50,13 @@ DonationBox<T>::~DonationBox() {
 }
 
 template<class T>
-class BlackBox {
+class BlackBox : public Box<T> {
 public:
-	//constructors
-	//template <class Collection>
 	BlackBox(DonationBox<T>&);
 
-	//functions
-	size_t size() const {
-		return data.size();
-	}
+	size_t size() const override { return data.size(); }
+	const T& operator[](const size_t n) const override { return *data[n]; }
 
-	const T& operator[](const size_t n) const {
-		return *data[n];
-	}
-
-	//destructor
 	~BlackBox();
 
 private:
