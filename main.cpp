@@ -9,16 +9,15 @@
 #include <vector>
 #include "discretization.h"
 #include "incident_field_package.h"
-#include "curve_package.h"
 #include "timer.h"
 #include "box.h"
 #include "discretize_curve.h"
+#include "field_solver.h"
 //#include <complex>
 
 int main() {
 	const double k = 5 * M_PI;
 	double alpha = 0;
-	//const int n = round(k/M_PI) * 100;
 
 	DonationBox<Curve<double>> listCurves;
 	listCurves << new Line<double>({-1, 4}, {1, 2})
@@ -30,7 +29,6 @@ int main() {
 	fields.addIncidentField(field);
 
 	DonationBox<DiscretizeCurve<double>> discCurves;
-	//int discSize = round(k / M_PI) * 2;
 	for (size_t i = 0; i < curvesSimple.size(); i++)
 		discCurves << new DiscretizeCurve<double>(curvesSimple[i], (i + 1) * 10, ch1Nodes);
 
@@ -54,5 +52,18 @@ int main() {
 		std::cout << (*x)[i] << std::endl;
 	}
 
+	DonationBox<Array<std::complex<double>>> currents;
+	size_t p = 0;
+	for (size_t i = 0; i < discCurves.size(); i++) {
+		Array<std::complex<double>>* current =
+				new Array<std::complex<double>>(discCurves[i].size());
+		for (size_t j = 0; j < discCurves[i].size(); j++, p++) {
+			(*current)[j] = (*x)[p];
+		}
+		currents << current;
+	}
+
+	FieldSolver<double> f(discCurves, currents, k);
+	std::cout <<std::endl<<std::endl<< f(2,2)<<std::endl ;
 	return 0;
 }

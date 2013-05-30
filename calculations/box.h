@@ -26,6 +26,7 @@ public:
 	size_t size() const override { return data.size(); }
 
 	const T& operator[](const size_t n) const override { return *data[n]; }
+	//T& operator[](size_t n) { return *data[n]; }
 
 	DonationBox<T>& operator<<(T* donator);
 

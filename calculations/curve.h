@@ -4,7 +4,7 @@
 #include <cmath>
 
 //TODO it's must be spline or general function
-template<class T>
+template<class T = double>
 class Curve {
 public:
 	virtual T x(T t) const = 0;
@@ -19,7 +19,7 @@ public:
 	virtual ~Curve() = default;
 };
 
-template<class T>
+template<class T = double>
 class Line: public Curve<T> {
 public:
 	Line(const Point<T>& a, const Point<T>& b);
@@ -66,7 +66,7 @@ Line<T>* Line<T>::clone() const {
 	return new Line<T>(p1,p2);
 }
 
-template<class T>
+template<class T = double>
 class Parabola: public Curve<T> {
 public:
 	Parabola(const T& x1, const T& x2, const T& p);
