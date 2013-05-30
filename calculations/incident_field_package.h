@@ -15,6 +15,7 @@ public:
 	size_t size() {return fields.size();}
 	void addIncidentField(const IncidentField<T, N>& wave);
 	const IncidentField<T, N>& operator[](const size_t n)const {return *fields[n];}
+	const N operator()(T x1, T x2);
 	T waveNumber()const {return waveNumber_;}
 	//destructor
 	~IncidentFieldPackage();
@@ -41,6 +42,15 @@ IncidentFieldPackage<T, N>::~IncidentFieldPackage(){
 	for (size_t i = 0; i < fields.size(); i++){
 		if (fields[i]) delete fields[i];
 	}
+}
+
+template<class T, class N>
+const N IncidentFieldPackage<T, N>::operator()(T x1, T x2) {
+	N fieldSum = 0;
+	for (size_t i = 0; i < size(); i++) {
+		fieldSum += fields[i](x1, x2);
+	}
+	return fieldSum;
 }
 
 

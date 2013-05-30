@@ -1,5 +1,6 @@
 #ifndef FIELD_SOLVER_H_
 #define FIELD_SOLVER_H_
+
 #include "box.h"
 #include "discretize_curve.h"
 #include "helper.h"

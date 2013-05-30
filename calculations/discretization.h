@@ -30,7 +30,7 @@ private:
 	void fillAnotherMatrixBlock(Matrix<N>& matr, size_t startI, size_t startJ,
 			const DiscretizeCurve<T>& c1, const DiscretizeCurve<T>& c2);
 
-	void fillMiddleMatrixBlock(Matrix<N>& matr, size_t startI,
+	void fillDiagonalMatrixBlock(Matrix<N>& matr, size_t startI,
 			const DiscretizeCurve<T>& c1);
 
 	//adapter for functions
@@ -77,7 +77,7 @@ MatrixPtr<N> Discretization<T, N>::createMatrix() {
 		size_t startJ = 0;
 		for (size_t n = 0; n < curves.size(); n++) {
 			if (m == n) {
-				fillMiddleMatrixBlock(*matrix, startI, curves[n]);
+				fillDiagonalMatrixBlock(*matrix, startI, curves[n]);
 			} else {
 				fillAnotherMatrixBlock(*matrix, startI, startJ, curves[m],
 						curves[n]);
@@ -114,7 +114,7 @@ void Discretization<T, N>::fillAnotherMatrixBlock(Matrix<N>& matr,
 }
 
 template<class T, class N>
-void Discretization<T, N>::fillMiddleMatrixBlock(Matrix<N>& matr, size_t startI,
+void Discretization<T, N>::fillDiagonalMatrixBlock(Matrix<N>& matr, size_t startI,
 		const DiscretizeCurve<T>& c1) {
 	size_t i = startI;
 	for (size_t ii = 0; ii < c1.size(); i++, ii++) {
