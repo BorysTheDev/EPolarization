@@ -4,6 +4,7 @@
 #include <math.h>
 #include "array.h"
 #include "matrix.h"
+#include <utility>
 
 template<typename T>
 using MatrixPtr = std::shared_ptr<Matrix<T>>;
@@ -51,10 +52,19 @@ Complex h2(const T& x) {
 	return Complex(j0(x), -y0(x));
 }
 
+template<class D>
+auto sum(D data, int s, int e) -> decltype(std::declval<D>()(s)) {
+	decltype(std::declval<D>()(s)) summ = 0;
+	for (int i = s; i < e; i++)
+		summ += data(i);
+	return summ;
+}
+
+
 //all data for E-polarization wave
 namespace epol {
 
-//Euler–Mascheroni constant
+//Euler-Mascheroni constant
 const double gamma = 0.57721566490153286060651209008240243104215933593992;
 
 /* limit
