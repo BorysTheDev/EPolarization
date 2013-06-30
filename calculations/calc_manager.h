@@ -17,14 +17,15 @@
 #include "box.h"
 #include "discretize_curve.h"
 #include "field_solver.h"
+#include "thread.h"
 
 
 template<class T>
-class CalcManager{
+class CalcManager : public mt::Runnable{
 public:
 	CalcManager(Given<T>);
 
-	void run();
+	void run() override;
 
 private:
 	Given<T> given;

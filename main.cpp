@@ -17,6 +17,9 @@
 #include <QtGui>
 #include "given.h"
 #include "calc_manager.h"
+#include "thread.h"
+
+using namespace mt;
 //#include <complex>
 
 int main(int argc, char** argv) {
@@ -38,7 +41,8 @@ int main(int argc, char** argv) {
 
 	Params given(k, listCurves, fields);
 	CalcManager<double> cm(given);
-	cm.run();
+	Thread t(cm);
+	t.start();
 
 
 	return app.exec();

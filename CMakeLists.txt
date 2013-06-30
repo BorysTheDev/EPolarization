@@ -11,8 +11,10 @@ ADD_DEFINITIONS(${QT_DEFINITIONS})
 include_directories (.)
 include_directories (./gui)
 include_directories (./calculations)
+include_directories (./mt)
 
 add_subdirectory(gui)
+add_subdirectory(mt)
 
 if (MSVC)
 	add_definitions (/W4)
@@ -22,16 +24,18 @@ else ()
 	message ("Unknown compiler")
 endif ()
 
-set (HEADERS ./calculations/calc_manager.h 
-			 ./calculations/helper.h
-			 ./calculations/array.h
-			 ./calculations/matrix.h
-			 ./calculations/curve.h
-			 ./calculations/discretization.h
-			 ./calculations/incident_field.h
-			 ./calculations/incident_field_package.h
-			 ./calculations/equation_matrix_solver.h
-	)
+set (HEADERS 
+  ./calculations/calc_manager.h 
+  ./calculations/helper.h
+  ./calculations/array.h
+  ./calculations/matrix.h
+  ./calculations/curve.h
+ ./calculations/discretization.h
+ ./calculations/incident_field.h
+ ./calculations/incident_field_package.h
+ ./calculations/equation_matrix_solver.h
+ ./mt/thread.h
+)
 set (SOURCES ./main.cpp)
 
 source_group ("Header Files" FILES ${HEADERS})
