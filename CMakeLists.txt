@@ -1,20 +1,18 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 2.6.4)
 
 set (PROJECT EPol)
 
 project (${PROJECT})
 
+FIND_PACKAGE(Qt4 REQUIRED)
+INCLUDE(${QT_USE_FILE})
+ADD_DEFINITIONS(${QT_DEFINITIONS})
+
 include_directories (.)
 include_directories (./gui)
 include_directories (./calculations)
 
-#set (LIBRARIES
-#		library_1
-#		library_2)
-
-#foreach (LIBRARY ${LIBRARIES})
-#	add_subdirectory (../${LIBRARY}/build bin/${LIBRARY})
-#endforeach ()
+add_subdirectory(gui)
 
 if (MSVC)
 	add_definitions (/W4)
@@ -41,4 +39,5 @@ source_group ("Source Files" FILES ${SOURCES})
 
 add_executable (${PROJECT} ${HEADERS} ${SOURCES})
 
-#target_link_libraries (${PROJECT} ${LIBRARIES})
+target_link_libraries(${PROJECT} qts)
+target_link_libraries(${PROJECT} ${QT_LIBRARIES})

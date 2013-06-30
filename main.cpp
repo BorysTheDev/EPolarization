@@ -13,10 +13,18 @@
 #include "box.h"
 #include "discretize_curve.h"
 #include "field_solver.h"
+#include "main_window.h"
+#include <QtGui>
+#include "given.h"
+#include "calc_manager.h"
 //#include <complex>
 
-int main() {
-	const double k = 5 * M_PI;
+int main(int argc, char** argv) {
+	QApplication app(argc, argv);
+	MainWindow mw;
+	mw.show();
+
+	double k = 5 * M_PI;
 	double alpha = 0;
 
 	DonationBox<Curve<double>> listCurves;
@@ -28,42 +36,10 @@ int main() {
 	IncidentFieldPackage<double> fields(k);
 	fields.addIncidentField(field);
 
-	DonationBox<DiscretizeCurve<double>> discCurves;
-	for (size_t i = 0; i < curvesSimple.size(); i++)
-		discCurves << new DiscretizeCurve<double>(curvesSimple[i], (i + 1) * 10, ch1Nodes);
+	Params given(k, listCurves, fields);
+	CalcManager<double> cm(given);
+	cm.run();
 
-	//BlackBox<DiscretizeCurve<double>> curves(discCurves);
-	Discretization<double> d(discCurves, fields);
 
-	std::cout << "Vector x(t_i):" <<std::endl;
-
-	EquationMatrixSolver<std::complex<double>> ems;
-
-	d.createArray();
-	Timer timer;
-	timer.start();
-
-	CArrayPtr<double> x = ems(*d.createMatrix(), *d.createArray());
-	timer.stop();
-	std::cout << "calculation time:" <<std::endl;
-	std::cout << timer.interval()<<std::endl;
-
-	for (size_t i = 0; i < x->size(); i++) {
-		std::cout << (*x)[i] << std::endl;
-	}
-
-	DonationBox<Array<std::complex<double>>> currents;
-	size_t p = 0;
-	for (size_t i = 0; i < discCurves.size(); i++) {
-		Array<std::complex<double>>* current =
-				new Array<std::complex<double>>(discCurves[i].size());
-		for (size_t j = 0; j < discCurves[i].size(); j++, p++) {
-			(*current)[j] = (*x)[p];
-		}
-		currents << current;
-	}
-
-	FieldSolver<double> f(discCurves, currents, k);
-	std::cout <<std::endl<<std::endl<< f(2,2)<<std::endl ;
-	return 0;
+	return app.exec();
 }

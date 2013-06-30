@@ -4,21 +4,21 @@
 
 template <class T>
 struct Given{
-
 	size_t curvesNum;
-	CurvePackage<T> &curves;
+	DonationBox<Curve<T>> &curves;
 	size_t fieldsNum;
 	IncidentFieldPackage<T> &fields;
 	T wavenumber;
 	std::vector<size_t> discretizionOrder;
 
-	Given(T wavenumber, CurvePackage<T> &curves, IncidentFieldPackage<T> &fields);
+	Given(T wavenumber, DonationBox<Curve<T>> &curves,
+			IncidentFieldPackage<T> &fields);
 };
 
 
 template <class T>
-Given<T>::Given(T wavenumber, CurvePackage<T> &curves, IncidentFieldPackage<T> &fields):
-				curves(curves), fields(fields){
+Given<T>::Given(T wavenumber, DonationBox<Curve<T>> &curves, IncidentFieldPackage<T> &fields):
+				curves(curves), fields(fields), wavenumber(wavenumber){
 	fieldsNum = fields.size();
 	curvesNum = curves.size();
 	for (size_t i = 0; i < curvesNum; i++){
@@ -26,5 +26,6 @@ Given<T>::Given(T wavenumber, CurvePackage<T> &curves, IncidentFieldPackage<T> &
 	}
 }
 
+typedef Given<double> Params;
 
 #endif
