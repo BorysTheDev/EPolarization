@@ -2,6 +2,7 @@
 #define INCIDENT_FIELD_H_
 #include "array.h"
 #include <vector>
+#include <complex>
 
 template<class T, class N = std::complex<T>>
 class IncidentField {

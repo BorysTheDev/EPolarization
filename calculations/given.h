@@ -1,6 +1,9 @@
 #ifndef GIVEN_H_
 #define GIVEN_H_
 #include <math.h>
+#include "box.h"
+#include "incident_field_package.h"
+#include "curve.h"
 
 template <class T>
 struct Given{

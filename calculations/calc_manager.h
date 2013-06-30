@@ -3,10 +3,7 @@
 
 #include "given.h"
 #include <iostream>
-#include "helper.h"
 #include "equation_matrix_solver.h"
-#include <memory>
-#include "matrix.h"
 #include "array.h"
 #include "curve.h"
 #include "incident_field.h"
@@ -41,7 +38,6 @@ void CalcManager<T>::run(){
 	for (size_t i = 0; i < given.curves.size(); i++)
 		discCurves << new DiscretizeCurve<double>(given.curves[i], (i + 1) * 10, ch1Nodes);
 
-	//BlackBox<DiscretizeCurve<double>> curves(discCurves);
 	Discretization<double> d(discCurves, given.fields);
 
 	std::cout << "Vector x(t_i):" <<std::endl;
