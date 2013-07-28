@@ -27,7 +27,7 @@ N FieldSolver<T, N>::operator()(const T& x, const T& y) const {
 	for (size_t i = 0; i < curves.size(); i++){
 		N tsum = 0;
 		for (size_t j = 0; j < curves[i].size(); j++) {
-			tsum += epol::kernel(curves[i].x(j), curves[i].y(j),
+			tsum += epol::kernel(curves[i][j].x, curves[i][j].y,
 					x, y, waveNumber) * currents[i][j];
 		}
 		sum += tsum * M_PI / (double)curves[i].size();
