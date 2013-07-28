@@ -69,7 +69,7 @@ void CalcManager<T>::run(){
 	}
 
 	FieldSolver<double> f(discCurves, currents, given.wavenumber);
-	std::cout <<std::endl<<std::endl<< f(2,2)<<std::endl ;
+	std::cout <<std::endl<<std::endl<< f({2,2})<<std::endl ;
 }
 
 #endif /* CALC_MANAGER_H_ */

@@ -94,13 +94,5 @@ inline N asymp(const T& t, const T& tau) {
 	return -(N(0, 2 * log(fabs(t - tau)) / M_PI));
 }
 
-/* kernel for E-polarization equation
- * k - wave number
- */
-template<class T, class N = std::complex<T>>
-inline N kernel(const T& x1, const T& x2, const T& y1, const T &y2,
-		const T& k) {
-	return h2(k * sqrt(sqr(x1 - y1) + sqr(x2 - y2)));
-}
 }
 #endif /* HELPER_H_ */

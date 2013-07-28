@@ -30,18 +30,6 @@ private:
 	void fillMatrixBlock(Matrix<N>& matr, size_t startI, size_t startJ,
 			const DiscretizeCurve<T>& c1, const DiscretizeCurve<T>& c2);
 
-
-	//adapter for functions
-	N kernel(const DiscretizeCurve<T>& c, size_t i, size_t j) {
-		return epol::kernel(c.ps(i).x, c.ps(i).y, c.ps(j).x, c.ps(j).y, waveNumber);
-	}
-
-	//adapter for functions
-	N kernel(const DiscretizeCurve<T>& c1, size_t i,
-			const DiscretizeCurve<T>& c2, size_t j) {
-		return epol::kernel(c1.ps(i).x, c1.ps(i).y, c2.ps(j).x, c2.ps(j).y, waveNumber);
-	}
-
 	//adapter for functions
 	N asymp(const DiscretizeCurve<T>& curve, size_t i, size_t j) {
 		return epol::asymp(curve[i].t, curve[j].t);
@@ -110,10 +98,8 @@ void Discretization<T, N>::fillMatrixBlock(Matrix<N>& matr,
     //diagonal block
     for (size_t ii = 0; ii < c1.size(); ii++) {
       for (size_t jj = 0; jj < c1.size(); jj++) {
-        N temp =
-            ii != jj ? h2(waveNumber *
-                dist(c1[ii] ,c2[jj]))
-                - asymp(c1, ii, jj) : lim(c1, ii);
+        N temp = ii != jj ? h2(waveNumber * dist(c1[ii], c2[jj]))
+            - asymp(c1, ii, jj) : lim(c1, ii);
         matr[i + ii][j + jj] = (M_PI / c1.size())
             * (temp - N(0, 2) * Ln(c1, ii, jj) / M_PI);
       }

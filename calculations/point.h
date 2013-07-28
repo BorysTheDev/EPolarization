@@ -11,8 +11,8 @@ struct Point
 template<class T>
 T dist(const Point<T>& p1, const Point<T>& p2)
 {
-  return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
+  return sqrt((p1.x - p2.x) * (p1.x - p2.x) +
+      (p1.y - p2.y) * (p1.y - p2.y));
 }
-
 
 #endif /* POINT_H_ */
