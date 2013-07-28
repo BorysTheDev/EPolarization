@@ -23,27 +23,12 @@ private:
 	size_t size;
 	T waveNumber;
 
-
 	const IncidentFieldsList& fields;
 	const CurvesList& curves;
 
-	void fillMatrixBlock(Matrix<N>& matr, size_t startI, size_t startJ,
-			const DiscretizeCurve<T>& c1, const DiscretizeCurve<T>& c2);
+	static void fillMatrixBlock(Matrix<N>& matr, size_t startI, size_t startJ,
+			const DiscretizeCurve<T>& c1, const DiscretizeCurve<T>& c2, T);
 
-	//adapter for functions
-	N asymp(const DiscretizeCurve<T>& curve, size_t i, size_t j) {
-		return epol::asymp(curve[i].t, curve[j].t);
-	}
-
-	//adapter for functions
-	N lim(const DiscretizeCurve<T>& curve, size_t i) {
-		return epol::lim(curve[i].d.x, curve[i].d.y, waveNumber);
-	}
-
-	//adapter for functions
-	N Ln(const DiscretizeCurve<T>& curve, size_t i, size_t j) {
-		return epol::Ln(curve[i].t, curve[j].t, curve.size());
-	}
 };
 
 template<class T, class N>
@@ -62,8 +47,8 @@ MatrixPtr<N> Discretization<T, N>::createMatrix() {
 	for (size_t m = 0; m < curves.size(); m++) {
 		size_t startJ = 0;
     for (size_t n = 0; n < curves.size(); n++) {
-      fillMatrixBlock(*matrix, startI, startJ, curves[m], curves[n]);
-
+      fillMatrixBlock(*matrix, startI, startJ,
+          curves[m], curves[n], waveNumber);
       startJ += curves[n].size();
 		}
 		startI += curves[m].size();
@@ -85,7 +70,7 @@ ArrayPtr<N> Discretization<T, N>::createArray() {
 template<class T, class N>
 void Discretization<T, N>::fillMatrixBlock(Matrix<N>& matr,
     size_t i, size_t j, const DiscretizeCurve<T>& c1,
-    const DiscretizeCurve<T>& c2) {
+    const DiscretizeCurve<T>& c2, T waveNumber) {
   if (i != j) {
     //not diagonal blocks
     for (size_t ii = 0; ii < c1.size(); ii++) {
@@ -99,9 +84,10 @@ void Discretization<T, N>::fillMatrixBlock(Matrix<N>& matr,
     for (size_t ii = 0; ii < c1.size(); ii++) {
       for (size_t jj = 0; jj < c1.size(); jj++) {
         N temp = ii != jj ? h2(waveNumber * dist(c1[ii], c2[jj]))
-            - asymp(c1, ii, jj) : lim(c1, ii);
+          - epol::asymp(c1[ii].t, c1[jj].t) : epol::lim(c1[ii].d, waveNumber);
         matr[i + ii][j + jj] = (M_PI / c1.size())
-            * (temp - N(0, 2) * Ln(c1, ii, jj) / M_PI);
+          * (temp - N(0, 2) * epol::Ln(c1[ii].t, c1[jj].t, c1.size())
+                / M_PI);
       }
     }
   }

@@ -21,7 +21,10 @@ void MainWindow::calculate(){
 
 	DonationBox<Curve<double>> listCurves;
 	listCurves << new Line<double>({-1, 4}, {1, 2})
-			<< new Parabola<double>(-1 ,1 , 0.5);
+			<< new Parabola<double>(-1 ,1 , 0.5)
+			<< new Line<double>({2, 4}, {3, 2})
+	    << new Line<double>({4, 4}, {5, 2})
+	    << new Line<double>({2, 5}, {4, 7});
 	BlackBox<Curve<double>> curvesSimple(listCurves);
 
 	EPolarizationField<double> field(k, alpha);
@@ -30,6 +33,5 @@ void MainWindow::calculate(){
 
 	Params given(k, listCurves, fields);
 	CalcManager<double> cm(given);
-	Thread t(cm);
-	t.start();
+	cm.run();
 }
