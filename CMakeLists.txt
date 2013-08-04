@@ -35,6 +35,7 @@ set (HEADERS
  ./calculations/incident_field_package.h
  ./calculations/equation_matrix_solver.h
  ./mt/thread.h
+ ./mt/parallelism.h
 )
 set (SOURCES ./main.cpp)
 
@@ -44,4 +45,5 @@ source_group ("Source Files" FILES ${SOURCES})
 add_executable (${PROJECT} ${HEADERS} ${SOURCES})
 
 target_link_libraries(${PROJECT} qts)
+target_link_libraries(${PROJECT} pthread)
 target_link_libraries(${PROJECT} ${QT_LIBRARIES})

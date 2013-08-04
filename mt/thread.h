@@ -20,17 +20,18 @@ public:
 
 private:
 	Runnable& run;
-	T thread;
+	T* thread;
 };
 
 template<>
 void Thread<std::thread>::start(){
-	thread = std::thread(&Runnable::run, &run);
+	thread = new std::thread(&Runnable::run, &run);
 }
 
 template<>
 Thread<std::thread>::~Thread(){
-	thread.join();
+	thread->join();
+	delete thread;
 }
 
 }

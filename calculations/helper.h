@@ -6,6 +6,14 @@
 #include "matrix.h"
 #include <utility>
 
+constexpr std::complex<double> operator"" _i(long double v ) {
+  return std::complex<double>(0, v);
+}
+
+constexpr std::complex<double> operator"" _i(unsigned long long v ) {
+  return std::complex<double>(0, v);
+}
+
 template<typename T>
 using MatrixPtr = std::shared_ptr<Matrix<T>>;
 
@@ -69,11 +77,12 @@ const double gamma = 0.57721566490153286060651209008240243104215933593992;
 
 /* limit
  * k - wave number
+ * d- derivative
  */
 template<class T, class N = std::complex<T>>
-N lim(T dx, T dy, T k) {
+N lim(Point<T> d, T k) {
 	return -N(0, 2 / M_PI)
-			* (log(k * sqrt(sqr(dx) + sqr(dy)) / 2) - M_PI / N(0, 2) + gamma);
+			* (log(k * sqrt(sqr(d.x) + sqr(d.y)) / 2) - M_PI / N(0, 2) + gamma);
 }
 
 //ln(t0 - t_) integral
@@ -94,13 +103,5 @@ inline N asymp(const T& t, const T& tau) {
 	return -(N(0, 2 * log(fabs(t - tau)) / M_PI));
 }
 
-/* kernel for E-polarization equation
- * k - wave number
- */
-template<class T, class N = std::complex<T>>
-inline N kernel(const T& x1, const T& x2, const T& y1, const T &y2,
-		const T& k) {
-	return h2(k * sqrt(sqr(x1 - y1) + sqr(x2 - y2)));
-}
 }
 #endif /* HELPER_H_ */

@@ -13,7 +13,7 @@ public:
 	FieldSolver(const CurvesList& curves, const CurrentList& currents, T k) :
 			curves(curves), currents(currents), waveNumber(k) {
 	}
-	N operator()(const T& x, const T& y) const ;
+	N operator()(const Point<T>& p) const ;
 
 private:
 	const CurvesList& curves;
@@ -22,13 +22,12 @@ private:
 };
 
 template<class T, class N>
-N FieldSolver<T, N>::operator()(const T& x, const T& y) const {
+N FieldSolver<T, N>::operator()(const Point<T>& p) const {
 	N sum = 0;
 	for (size_t i = 0; i < curves.size(); i++){
 		N tsum = 0;
 		for (size_t j = 0; j < curves[i].size(); j++) {
-			tsum += epol::kernel(curves[i].x(j), curves[i].y(j),
-					x, y, waveNumber) * currents[i][j];
+			tsum += h2(waveNumber * dist(curves[i][j], p)) * currents[i][j];
 		}
 		sum += tsum * M_PI / (double)curves[i].size();
 	}

@@ -8,7 +8,7 @@
 #include "curve.h"
 #include "incident_field.h"
 #include <vector>
-#include "discretization.h"
+#include "mt_discretization.h"
 #include "incident_field_package.h"
 #include "timer.h"
 #include "box.h"
@@ -36,7 +36,8 @@ template<class T>
 void CalcManager<T>::run(){
 	DonationBox<DiscretizeCurve<double>> discCurves;
 	for (size_t i = 0; i < given.curves.size(); i++)
-		discCurves << new DiscretizeCurve<double>(given.curves[i], (i + 1) * 10, ch1Nodes);
+		discCurves << new DiscretizeCurve<double>(
+		    given.curves[i], (i + 1) * 50, ch1Nodes);
 
 	Discretization<double> d(discCurves, given.fields);
 
@@ -69,7 +70,7 @@ void CalcManager<T>::run(){
 	}
 
 	FieldSolver<double> f(discCurves, currents, given.wavenumber);
-	std::cout <<std::endl<<std::endl<< f(2,2)<<std::endl ;
+	std::cout <<std::endl<<std::endl<< f({2,2})<<std::endl ;
 }
 
 #endif /* CALC_MANAGER_H_ */
