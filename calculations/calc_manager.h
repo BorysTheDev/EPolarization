@@ -8,7 +8,7 @@
 #include "curve.h"
 #include "incident_field.h"
 #include <vector>
-#include "mt_discretization.h"
+#include "discretization.h"
 #include "incident_field_package.h"
 #include "timer.h"
 #include "box.h"
@@ -37,7 +37,7 @@ void CalcManager<T>::run(){
 	DonationBox<DiscretizeCurve<double>> discCurves;
 	for (size_t i = 0; i < given.curves.size(); i++)
 		discCurves << new DiscretizeCurve<double>(
-		    given.curves[i], (i + 1) * 50, ch1Nodes);
+		    given.curves[i], 400, ch1Nodes);
 
 	Discretization<double> d(discCurves, given.fields);
 
@@ -48,15 +48,17 @@ void CalcManager<T>::run(){
 	d.createArray();
 	Timer timer;
 	timer.start();
-
-	CArrayPtr<double> x = ems(*d.createMatrix(), *d.createArray());
+	auto matr = d.createMatrix();
 	timer.stop();
-	std::cout << "calculation time:" <<std::endl;
-	std::cout << timer.interval()<<std::endl;
+	std::cout << "fill matrix time:" << timer.interval()<<std::endl;
+	timer.start();
+	CArrayPtr<double> x = ems(*matr, *d.createArray());
+	timer.stop();
+	std::cout << "calculation time:" << timer.interval()<<std::endl;
 
-	for (size_t i = 0; i < x->size(); i++) {
-		std::cout << (*x)[i] << std::endl;
-	}
+	//for (size_t i = 0; i < x->size(); i++) {
+		//std::cout << (*x)[i] << std::endl;
+	//}
 
 	DonationBox<Array<std::complex<double>>> currents;
 	size_t p = 0;

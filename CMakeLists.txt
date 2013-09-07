@@ -12,23 +12,17 @@ include_directories (.)
 include_directories (./gui)
 include_directories (./calculations)
 include_directories (./mt)
+include_directories (./gauss)
 
 add_subdirectory(gui)
-add_subdirectory(mt)
+add_subdirectory(gauss)
 
-if (MSVC)
-	add_definitions (/W4)
-elseif (CMAKE_COMPILER_IS_GNUCXX)
-	add_definitions (-Wall -pedantic -std=gnu++11)
-else ()
-	message ("Unknown compiler")
-endif ()
+add_definitions (-Wall -pedantic -std=gnu++11 -o2)
 
 set (HEADERS 
   ./calculations/calc_manager.h 
   ./calculations/helper.h
   ./calculations/array.h
-  ./calculations/matrix.h
   ./calculations/curve.h
  ./calculations/discretization.h
  ./calculations/incident_field.h
