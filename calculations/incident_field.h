@@ -1,51 +1,48 @@
-#ifndef INCIDENT_FIELD_H_
-#define INCIDENT_FIELD_H_
+#ifndef INCIDENreal_FIELD_H_
+#define INCIDENreal_FIELD_H_
 #include "array.h"
 #include <vector>
-#include <complex>
+#include "types.h"
 
-template<class T, class N = std::complex<T>>
 class IncidentField {
 public:
 	//constructor
-	IncidentField(T waveNumber, T alpha):
+	IncidentField(real waveNumber, real alpha):
 			waveNumber_(waveNumber), alpha_(alpha) {}
 
 	//functions
-	virtual N operator()(T x1, T x2) const = 0;
+	virtual complex operator()(real x1, real x2) const = 0;
 
 	virtual IncidentField* clone() const = 0;
 
-	T waveNumber()const {return waveNumber_;}
+	real waveNumber()const {return waveNumber_;}
 
 	//destructor
 	virtual ~IncidentField() = default;
 
 protected:
-	T waveNumber_;
-	T alpha_;
+	real waveNumber_;
+	real alpha_;
 };
 
-template<class T, class N = std::complex<T>>
-class EPolarizationField: public IncidentField<T> {
+class EPolarizationField: public IncidentField {
 public:
 	//constructor
-	EPolarizationField(T waveNumber, T alpha) :
-			IncidentField<T>(waveNumber, alpha) {}
+	EPolarizationField(real waveNumber, real alpha) :
+			IncidentField(waveNumber, alpha) {}
 
 	//functions
-	N operator()(T x1, T x2)const override;
+	complex operator()(real x1, real x2)const override;
 
 	EPolarizationField* clone() const override {
 		return new EPolarizationField(this->waveNumber_, this->alpha_);}
 };
 
 
-template<class T, class N>
-N EPolarizationField<T, N>::operator()(T x1, T x2)const {
-	T expArg = (x1 * cos(this->alpha_) + x2 * sin(this->alpha_))
+complex EPolarizationField::operator()(real x1, real x2)const {
+	real expArg = (x1 * cos(this->alpha_) + x2 * sin(this->alpha_))
 			* this->waveNumber_;
-	return exp(N(0, -expArg));
+	return exp(complex(0, -expArg));
 }
 
-#endif /* INCIDENT_FIELD_H_ */
+#endif /* INCIDENreal_FIELD_H_ */

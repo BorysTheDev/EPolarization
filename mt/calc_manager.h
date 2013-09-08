@@ -14,29 +14,32 @@
 #include "box.h"
 #include "discretize_curve.h"
 #include "field_solver.h"
+#include "thread.h"
 
 
-class CalcManager {
+template<class T>
+class CalcManager : public mt::Runnable{
 public:
-	CalcManager(Given);
+	CalcManager(Given<T>);
 
-	void run();
+	void run() override;
 
 private:
-	Given given;
+	Given<T> given;
 };
 
-
-CalcManager::CalcManager(Given params):given(params){
+template<class T>
+CalcManager<T>::CalcManager(Given<T> params):given(params){
 }
 
-void CalcManager::run(){
-	DonationBox<DiscretizeCurve> discCurves;
+template<class T>
+void CalcManager<T>::run(){
+	DonationBox<DiscretizeCurve<double>> discCurves;
 	for (size_t i = 0; i < given.curves.size(); i++)
-		discCurves << new DiscretizeCurve(
+		discCurves << new DiscretizeCurve<double>(
 		    given.curves[i], 400, ch1Nodes);
 
-	Discretization d(discCurves, given.fields);
+	Discretization<double> d(discCurves, given.fields);
 
 	std::cout << "Vector x(t_i):" <<std::endl;
 
@@ -68,7 +71,7 @@ void CalcManager::run(){
 		currents << current;
 	}
 
-	FieldSolver f(discCurves, currents, given.wavenumber);
+	FieldSolver<double> f(discCurves, currents, given.wavenumber);
 	std::cout <<std::endl<<std::endl<< f({2,2})<<std::endl ;
 }
 

@@ -7,32 +7,31 @@
 #include "incident_field_package.h"
 #include "discretize_curve.h"
 #include "box.h"
+#include "types.h"
 
-template<class T, class N = std::complex<T>>
 class Discretization {
-	typedef IncidentFieldPackage<T> IncidentFieldsList;
-	typedef Box<DiscretizeCurve<T>> CurvesList;
+	typedef IncidentFieldPackage IncidentFieldsList;
+	typedef Box<DiscretizeCurve> CurvesList;
 
 public:
 	Discretization(const CurvesList& sCurves, const IncidentFieldsList& fields);
 
-	MatrixPtr<N> createMatrix();
-	ArrayPtr<N> createArray();
+	MatrixPtr<complex> createMatrix();
+	ArrayPtr<complex> createArray();
 
 private:
 	size_t size;
-	T waveNumber;
+	real waveNumber;
 
 	const IncidentFieldsList& fields;
 	const CurvesList& curves;
 
-	static void fillMatrixBlock(Matrix<N>& matr, size_t startI, size_t startJ,
-			const DiscretizeCurve<T>& c1, const DiscretizeCurve<T>& c2, T);
+	static void fillMatrixBlock(Matrix<complex>& matr, size_t startI, size_t startJ,
+			const DiscretizeCurve& c1, const DiscretizeCurve& c2,real);
 
 };
 
-template<class T, class N>
-Discretization<T, N>::Discretization(const CurvesList& sCurves,
+Discretization::Discretization(const CurvesList& sCurves,
 		const IncidentFieldsList& fields) : fields(fields), curves(sCurves) {
 	waveNumber = fields.waveNumber();
 	size = 0;
@@ -40,9 +39,8 @@ Discretization<T, N>::Discretization(const CurvesList& sCurves,
 		size += sCurves[i].size();
 }
 
-template<class T, class N>
-MatrixPtr<N> Discretization<T, N>::createMatrix() {
-	Matrix<N> *matrix = new Matrix<N>(size);
+MatrixPtr<complex> Discretization::createMatrix() {
+	Matrix<complex> *matrix = new Matrix<complex>(size);
 	size_t startI = 0;
 	for (size_t m = 0; m < curves.size(); m++) {
 		size_t startJ = 0;
@@ -53,24 +51,22 @@ MatrixPtr<N> Discretization<T, N>::createMatrix() {
 		}
 		startI += curves[m].size();
 	}
-	return MatrixPtr<N>(matrix);
+	return MatrixPtr<complex>(matrix);
 }
 
-template<class T, class N>
-ArrayPtr<N> Discretization<T, N>::createArray() {
-	Array<N> *f = new Array<N>(size);
+ArrayPtr<complex> Discretization::createArray() {
+	Array<complex> *f = new Array<complex>(size);
 	int ii = 0;
 	for (size_t i = 0; i < curves.size(); i++) {
 		for (size_t j = 0; j < curves[i].size(); j++, ii++)
 			(*f)[ii] = -fields[0](curves[i][j].x, curves[i][j].y);
 	}
-	return ArrayPtr<N>(f);
+	return ArrayPtr<complex>(f);
 }
 
-template<class T, class N>
-void Discretization<T, N>::fillMatrixBlock(Matrix<N>& matr,
-    size_t i, size_t j, const DiscretizeCurve<T>& c1,
-    const DiscretizeCurve<T>& c2, T waveNumber) {
+void Discretization::fillMatrixBlock(Matrix<complex>& matr,
+    size_t i, size_t j, const DiscretizeCurve& c1,
+    const DiscretizeCurve& c2, real waveNumber) {
   if (i != j) {
     //not diagonal blocks
     for (size_t ii = 0; ii < c1.size(); ii++) {
@@ -83,10 +79,10 @@ void Discretization<T, N>::fillMatrixBlock(Matrix<N>& matr,
     //diagonal block
     for (size_t ii = 0; ii < c1.size(); ii++) {
       for (size_t jj = 0; jj < c1.size(); jj++) {
-        N temp = ii != jj ? h2(waveNumber * dist(c1[ii], c2[jj]))
+        complex temp = ii != jj ? h2(waveNumber * dist(c1[ii], c2[jj]))
           - epol::asymp(c1[ii].t, c1[jj].t) : epol::lim(c1[ii].d, waveNumber);
         matr[i + ii][j + jj] = (M_PI / c1.size())
-          * (temp - N(0, 2) * epol::Ln(c1[ii].t, c1[jj].t, c1.size())
+          * (temp - complex(0, 2) * epol::Ln(c1[ii].t, c1[jj].t, c1.size())
                 / M_PI);
       }
     }

@@ -2,6 +2,7 @@
 #define THREAD_H_
 #include <thread>
 
+/*
 namespace mt {
 
 struct Runnable {
@@ -37,5 +38,5 @@ Thread<std::thread>::~Thread(){
 }
 typedef realization::Thread<std::thread> Thread;
 }
-
+*/
 #endif /* THREAD_H_ */

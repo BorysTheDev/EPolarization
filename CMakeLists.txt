@@ -14,13 +14,15 @@ include_directories (./calculations)
 include_directories (./mt)
 include_directories (./gauss)
 
-add_subdirectory(gui)
+#add_subdirectory(gui)
 add_subdirectory(gauss)
 
 add_definitions (-Wall -pedantic -std=gnu++11 -o2)
 
 set (HEADERS 
   ./calculations/calc_manager.h 
+  ./calculations/types.h
+  ./calculations/field_solver.h
   ./calculations/helper.h
   ./calculations/array.h
   ./calculations/curve.h
@@ -39,5 +41,5 @@ source_group ("Source Files" FILES ${SOURCES})
 add_executable (${PROJECT} ${HEADERS} ${SOURCES})
 
 target_link_libraries(${PROJECT} qts)
-target_link_libraries(${PROJECT} pthread)
+#target_link_libraries(${PROJECT} pthread)
 target_link_libraries(${PROJECT} ${QT_LIBRARIES})

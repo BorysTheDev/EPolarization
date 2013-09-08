@@ -1,26 +1,25 @@
 #ifndef GIVEN_H_
 #define GIVEN_H_
-#include <math.h>
+#include "math.h"
 #include "box.h"
 #include "incident_field_package.h"
 #include "curve.h"
+#include "types.h"
 
-template <class T>
 struct Given{
 	size_t curvesNum;
-	DonationBox<Curve<T>> &curves;
+	DonationBox<Curve> &curves;
 	size_t fieldsNum;
-	IncidentFieldPackage<T> &fields;
-	T wavenumber;
+	IncidentFieldPackage &fields;
+	real wavenumber;
 	std::vector<size_t> discretizionOrder;
 
-	Given(T wavenumber, DonationBox<Curve<T>> &curves,
-			IncidentFieldPackage<T> &fields);
+	Given(real wavenumber, DonationBox<Curve> &curves,
+			IncidentFieldPackage &fields);
 };
 
 
-template <class T>
-Given<T>::Given(T wavenumber, DonationBox<Curve<T>> &curves, IncidentFieldPackage<T> &fields):
+Given::Given(real wavenumber, DonationBox<Curve> &curves, IncidentFieldPackage &fields):
 				curves(curves), fields(fields), wavenumber(wavenumber){
 	fieldsNum = fields.size();
 	curvesNum = curves.size();
@@ -29,6 +28,6 @@ Given<T>::Given(T wavenumber, DonationBox<Curve<T>> &curves, IncidentFieldPackag
 	}
 }
 
-typedef Given<double> Params;
+typedef Given Params;
 
 #endif

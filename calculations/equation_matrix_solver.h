@@ -4,7 +4,6 @@
 #include "helper.h"
 #include "matrix.h"
 #include "array.h"
-#include <complex>
 
 template<typename N>
 class EquationMatrixSolver {

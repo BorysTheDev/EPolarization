@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.6.4)
 #PROJECT (qts C CXX)
 FIND_PACKAGE(Qt4 REQUIRED)
 
-set(CMAKE_CXX_FLAGS "-g -O0 -std=c++11 -Wall")
+set(CMAKE_CXX_FLAGS "-g -O2 -std=gnu++11 -Wall")
 
 SET(qts_SOURCES 
   main_window.cpp)

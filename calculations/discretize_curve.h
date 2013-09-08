@@ -4,30 +4,28 @@
 #include "curve.h"
 
 template<class T>
-struct ParametricCurvePoint: public Point<T>
+struct ParametricCurvePoint: public Point<real>
 {
   T t;        //parameter
-  Point<T> d; //derivative
+  Point<real> d; //derivative
 };
 
-template<class T>
 class DiscretizeCurve{
 public:
 	template<class PointGen>
-	DiscretizeCurve(const Curve<T>&, size_t size, PointGen func);
+	DiscretizeCurve(const Curve&, size_t size, PointGen func);
 
-	ParametricCurvePoint<T> operator[](size_t i) const {return points[i];}
+	ParametricCurvePoint<real> operator[](size_t i) const {return points[i];}
 	size_t size() const {return points.size();}
 
 private:
-	Array<ParametricCurvePoint<T>> points;
+	Array<ParametricCurvePoint<real>> points;
 	DiscretizeCurve(const DiscretizeCurve&) = delete;
 	const DiscretizeCurve& operator= (const DiscretizeCurve&) = delete;
 };
 
-template<class T>
 template<class PointGen>
-DiscretizeCurve<T>::DiscretizeCurve(const Curve<T>& curve,
+DiscretizeCurve::DiscretizeCurve(const Curve& curve,
     size_t size, PointGen func) : points(size)
 {
   for (size_t i = 0; i < size; i++) {

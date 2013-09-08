@@ -1,17 +1,17 @@
 #ifndef HELPER_H_
 #define HELPER_H_
-#include <complex>
 #include <math.h>
 #include "array.h"
 #include "matrix.h"
 #include <utility>
+#include "types.h"
 
-constexpr std::complex<double> operator"" _i(long double v ) {
-  return std::complex<double>(0, v);
+constexpr complex operator"" _i(long double v ) {
+  return complex(0, v);
 }
 
-constexpr std::complex<double> operator"" _i(unsigned long long v ) {
-  return std::complex<double>(0, v);
+constexpr complex operator"" _i(unsigned long long v ) {
+  return complex(0, v);
 }
 
 template<typename T>
@@ -79,15 +79,13 @@ const double gamma = 0.57721566490153286060651209008240243104215933593992;
  * k - wave number
  * d- derivative
  */
-template<class T, class N = std::complex<T>>
-N lim(Point<T> d, T k) {
-	return -N(0, 2 / M_PI)
-			* (log(k * sqrt(sqr(d.x) + sqr(d.y)) / 2) - M_PI / N(0, 2) + gamma);
+complex lim(Point<real> d, real k) {
+	return -complex(0, 2 / M_PI)
+			* (log(k * sqrt(sqr(d.x) + sqr(d.y)) / 2) - M_PI / complex(0, 2) + gamma);
 }
 
 //ln(t0 - t_) integral
-template<class T>
-T Ln(const T& t0, T const& t_, const int n) {
+real Ln(const real& t0, real const& t_, const int n) {
 	double sum = 0;
 	for (int p = 1; p < n; p++) {
 		sum += ch1(p, t_) * ch1(p, t0) / p;
@@ -98,9 +96,8 @@ T Ln(const T& t0, T const& t_, const int n) {
 /* asymptotic for Hankel function
  *
  */
-template<class T, class N = std::complex<T>>
-inline N asymp(const T& t, const T& tau) {
-	return -(N(0, 2 * log(fabs(t - tau)) / M_PI));
+inline complex asymp(const real& t, const real& tau) {
+	return -(complex(0, 2 * log(fabs(t - tau)) / M_PI));
 }
 
 }
