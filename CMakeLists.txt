@@ -33,7 +33,15 @@ set (HEADERS
  ./mt/thread.h
  ./mt/parallelism.h
 )
-set (SOURCES ./main.cpp)
+set (SOURCES 
+    ./main.cpp
+    ./calculations/field_solver.cpp
+    ./calculations/curve.cpp
+    ./calculations/helper.cpp
+    ./calculations/discretization.cpp
+    ./calculations/incident_field.cpp
+    ./calculations/incident_field_package.cpp
+)
 
 source_group ("Header Files" FILES ${HEADERS})
 source_group ("Source Files" FILES ${SOURCES})

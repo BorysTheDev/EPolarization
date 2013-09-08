@@ -1,4 +1,4 @@
-#ifndef CALC_MANAGER_H_
+/*#ifndef CALC_MANAGER_H_
 #define CALC_MANAGER_H_
 
 #include "given.h"

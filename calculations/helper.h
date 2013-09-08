@@ -5,14 +5,14 @@
 #include "matrix.h"
 #include <utility>
 #include "types.h"
-
+/*
 constexpr complex operator"" _i(long double v ) {
   return complex(0, v);
 }
 
 constexpr complex operator"" _i(unsigned long long v ) {
   return complex(0, v);
-}
+}*/
 
 template<typename T>
 using MatrixPtr = std::shared_ptr<Matrix<T>>;
@@ -50,9 +50,7 @@ T sqr(const T& base) {
 }
 
 //1st kind Chebyshev nodes
-double ch1Nodes(const int n, const int i) {
-	return cos((2.0 * i + 1.0) * M_PI / (2.0 * n));
-}
+double ch1Nodes(const int n, const int i);
 
 //2nd kind Hankel function
 template<class T = double, class Complex = std::complex<T>>
@@ -79,25 +77,16 @@ const double gamma = 0.57721566490153286060651209008240243104215933593992;
  * k - wave number
  * d- derivative
  */
-complex lim(Point<real> d, real k) {
-	return -complex(0, 2 / M_PI)
-			* (log(k * sqrt(sqr(d.x) + sqr(d.y)) / 2) - M_PI / complex(0, 2) + gamma);
-}
+types::complex lim(types::RPoint d, types::real k);
 
 //ln(t0 - t_) integral
-real Ln(const real& t0, real const& t_, const int n) {
-	double sum = 0;
-	for (int p = 1; p < n; p++) {
-		sum += ch1(p, t_) * ch1(p, t0) / p;
-	}
-	return -(log(2) + 2 * sum);
-}
+types::real Ln(const types::real& t0, const types::real& t_, const int n);
 
 /* asymptotic for Hankel function
  *
  */
-inline complex asymp(const real& t, const real& tau) {
-	return -(complex(0, 2 * log(fabs(t - tau)) / M_PI));
+inline types::complex asymp(const types::real& t, const types::real& tau) {
+	return -(types::complex(0, 2 * log(fabs(t - tau)) / M_PI));
 }
 
 }

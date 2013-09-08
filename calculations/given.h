@@ -11,15 +11,15 @@ struct Given{
 	DonationBox<Curve> &curves;
 	size_t fieldsNum;
 	IncidentFieldPackage &fields;
-	real wavenumber;
+	types::real wavenumber;
 	std::vector<size_t> discretizionOrder;
 
-	Given(real wavenumber, DonationBox<Curve> &curves,
+	Given(types::real wavenumber, DonationBox<Curve> &curves,
 			IncidentFieldPackage &fields);
 };
 
 
-Given::Given(real wavenumber, DonationBox<Curve> &curves, IncidentFieldPackage &fields):
+Given::Given(types::real wavenumber, DonationBox<Curve> &curves, IncidentFieldPackage &fields):
 				curves(curves), fields(fields), wavenumber(wavenumber){
 	fieldsNum = fields.size();
 	curvesNum = curves.size();

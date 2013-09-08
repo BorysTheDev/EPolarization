@@ -3,36 +3,28 @@
 
 #include "box.h"
 #include "discretize_curve.h"
-#include "helper.h"
 #include "types.h"
 #include "array.h"
+#include "helper.h"
 
 class FieldSolver {
 	typedef Box<DiscretizeCurve> CurvesList;
-	typedef Box<Array<complex>> CurrentList;
+	typedef Box<Array<types::complex>> CurrentList;
 public:
-	FieldSolver(const CurvesList& curves, const CurrentList& currents, double k) :
-			curves(curves), currents(currents), waveNumber(k) {
+	FieldSolver(const CurvesList& curves, const CurrentList& currents,
+			types::real k) : curves(curves), currents(currents), waveNumber(k) {
 	}
-	std::complex<double>  operator()(const Point<double>& p) const ;
+	types::complex field(const types::RPoint& p) const;
 
+	types::complex farField(const types::real angle) const;
 private:
+
 	const CurvesList& curves;
 	const CurrentList& currents;
-	const real waveNumber;
+	const types::real waveNumber;
 };
 
-complex FieldSolver::operator()(const Point<real>& p) const {
-	complex sum = 0;
-	for (size_t i = 0; i < curves.size(); i++){
-		complex tsum = 0;
-		for (size_t j = 0; j < curves[i].size(); j++) {
-			tsum += h2(waveNumber * dist(curves[i][j], p)) * currents[i][j];
-		}
-		sum += tsum * M_PI / (double)curves[i].size();
-	}
-	return sum;
-}
+
 
 
 #endif /* FIELD_SOLVER_H_ */

@@ -34,7 +34,7 @@ void CalcManager::run(){
 	DonationBox<DiscretizeCurve> discCurves;
 	for (size_t i = 0; i < given.curves.size(); i++)
 		discCurves << new DiscretizeCurve(
-		    given.curves[i], 400, ch1Nodes);
+		    given.curves[i], 20, ch1Nodes);
 
 	Discretization d(discCurves, given.fields);
 
@@ -53,9 +53,9 @@ void CalcManager::run(){
 	timer.stop();
 	std::cout << "calculation time:" << timer.interval()<<std::endl;
 
-	//for (size_t i = 0; i < x->size(); i++) {
-		//std::cout << (*x)[i] << std::endl;
-	//}
+	for (size_t i = 0; i < x->size(); i++) {
+		std::cout << (*x)[i] << std::endl;
+	}
 
 	DonationBox<Array<std::complex<double>>> currents;
 	size_t p = 0;
@@ -69,7 +69,8 @@ void CalcManager::run(){
 	}
 
 	FieldSolver f(discCurves, currents, given.wavenumber);
-	std::cout <<std::endl<<std::endl<< f({2,2})<<std::endl ;
+	std::cout <<std::endl<<std::endl<< f.field({2,2})<<std::endl
+			<<std::endl<< f.farField(1);
 }
 
 #endif /* CALC_MANAGER_H_ */

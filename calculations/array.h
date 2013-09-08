@@ -1,8 +1,10 @@
 #ifndef ARRAY_H_
 #define ARRAY_H_
+#include "stdint.h"
 
 template<class T>
 class Array{
+	typedef uint32_t size_t;
 public:
 	//constructors
 	explicit Array(size_t size);

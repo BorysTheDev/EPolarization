@@ -7,9 +7,9 @@
 template<class T>
 class Box {
 public:
-	virtual size_t size() const = 0;
+	virtual std::size_t size() const = 0;
 
-	virtual const T& operator[](const size_t n) const = 0;
+	virtual const T& operator[](const std::size_t n) const = 0;
 
 	virtual ~Box(){}
 protected:
@@ -23,10 +23,10 @@ template<class T>
 class DonationBox : public Box<T> {
 public:
 	DonationBox(){}
-	size_t size() const override { return data.size(); }
+	std::size_t size() const override { return data.size(); }
 
-	const T& operator[](const size_t n) const override { return *data[n]; }
-	//T& operator[](size_t n) { return *data[n]; }
+	const T& operator[](const std::size_t n) const override { return *data[n]; }
+	//T& operator[](std::size_t n) { return *data[n]; }
 
 	DonationBox<T>& operator<<(T* donator);
 
@@ -55,8 +55,8 @@ class BlackBox : public Box<T> {
 public:
 	BlackBox(DonationBox<T>&);
 
-	size_t size() const override { return data.size(); }
-	const T& operator[](const size_t n) const override { return *data[n]; }
+	std::size_t size() const override { return data.size(); }
+	const T& operator[](const std::size_t n) const override { return *data[n]; }
 
 	~BlackBox();
 
@@ -68,7 +68,7 @@ private:
 
 template <class T>
 BlackBox<T>::BlackBox(DonationBox<T>& d): data(d.size()) {
-	for(size_t i = 0; i < d.size(); i++) {
+	for(std::size_t i = 0; i < d.size(); i++) {
 		data[i] = d[i].clone();
 	}
 }
