@@ -28,6 +28,6 @@ int main(int argc, char** argv) {
   fields.addIncidentField(field);
 
   Params given(k, listCurves, fields);
-  CalcManager<double> cm(given);
+  CalcManager cm(given);
   cm.run();
 }

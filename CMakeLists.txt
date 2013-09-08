@@ -40,6 +40,6 @@ source_group ("Source Files" FILES ${SOURCES})
 
 add_executable (${PROJECT} ${HEADERS} ${SOURCES})
 
-target_link_libraries(${PROJECT} qts)
+#target_link_libraries(${PROJECT} qts)
 #target_link_libraries(${PROJECT} pthread)
-target_link_libraries(${PROJECT} ${QT_LIBRARIES})
+#target_link_libraries(${PROJECT} ${QT_LIBRARIES})
