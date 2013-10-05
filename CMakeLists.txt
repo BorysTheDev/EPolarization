@@ -4,14 +4,14 @@ set (PROJECT EPol)
 
 project (${PROJECT})
 
-FIND_PACKAGE(Qt4 REQUIRED)
-INCLUDE(${QT_USE_FILE})
-ADD_DEFINITIONS(${QT_DEFINITIONS})
+#FIND_PACKAGE(Qt4 REQUIRED)
+#INCLUDE(${QT_USE_FILE})
+#ADD_DEFINITIONS(${QT_DEFINITIONS})
 
 include_directories (.)
-include_directories (./gui)
+#include_directories (./gui)
 include_directories (./calculations)
-include_directories (./mt)
+#include_directories (./mt)
 include_directories (./gauss)
 
 #add_subdirectory(gui)
@@ -22,6 +22,7 @@ add_definitions (-Wall -pedantic -std=gnu++11 -O2)
 set (HEADERS 
   ./calculations/calc_manager.h 
   ./calculations/types.h
+  ./calculations/given.h
   ./calculations/field_solver.h
   ./calculations/helper.h
   ./calculations/array.h
@@ -30,14 +31,16 @@ set (HEADERS
  ./calculations/incident_field.h
  ./calculations/incident_field_package.h
  ./calculations/equation_matrix_solver.h
- ./mt/thread.h
- ./mt/parallelism.h
+ #./mt/thread.h
+ #./mt/parallelism.h
 )
 set (SOURCES 
     ./main.cpp
     ./calculations/field_solver.cpp
     ./calculations/curve.cpp
     ./calculations/helper.cpp
+    ./calculations/given.cpp
+    ./calculations/calc_manager.cpp 
     ./calculations/discretization.cpp
     ./calculations/incident_field.cpp
     ./calculations/incident_field_package.cpp

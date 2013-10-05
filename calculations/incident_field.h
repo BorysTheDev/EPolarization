@@ -1,5 +1,5 @@
-#ifndef INCIDENreal_FIELD_H_
-#define INCIDENreal_FIELD_H_
+#ifndef INCIDENT_FIELD_H_
+#define INCIDENT_FIELD_H_
 #include "array.h"
 #include <vector>
 #include "types.h"
@@ -40,4 +40,4 @@ public:
 
 
 
-#endif /* INCIDENreal_FIELD_H_ */
+#endif /* INCIDENT_FIELD_H_ */

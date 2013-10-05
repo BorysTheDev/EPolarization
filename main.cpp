@@ -1,5 +1,4 @@
 #include <iostream>
-#include "given.h"
 #include "calc_manager.h"
 #include "curve.h"
 #include "incident_field.h"
@@ -26,7 +25,7 @@ int main(int argc, char** argv) {
   IncidentFieldPackage fields(k);
   fields.addIncidentField(field);
 
-  Params given(k, listCurves, fields);
+  Given given(k, listCurves, fields);
   CalcManager cm(given);
   cm.run();
 }
