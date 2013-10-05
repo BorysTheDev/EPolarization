@@ -17,7 +17,7 @@ include_directories (./gauss)
 #add_subdirectory(gui)
 add_subdirectory(gauss)
 
-add_definitions (-Wall -pedantic -std=gnu++11 -o2)
+add_definitions (-Wall -pedantic -std=gnu++11 -O2)
 
 set (HEADERS 
   ./calculations/calc_manager.h 

@@ -53,10 +53,10 @@ void CalcManager::run(){
 	timer.stop();
 	std::cout << "calculation time:" << timer.interval()<<std::endl;
 
-	for (size_t i = 0; i < x->size(); i++) {
+	/*for (size_t i = 0; i < x->size(); i++) {
 		std::cout << (*x)[i] << std::endl;
-	}
-
+	}*/
+	timer.start();
 	DonationBox<Array<std::complex<double>>> currents;
 	size_t p = 0;
 	for (size_t i = 0; i < discCurves.size(); i++) {
@@ -69,6 +69,12 @@ void CalcManager::run(){
 	}
 
 	FieldSolver f(discCurves, currents, given.wavenumber);
+	for (int i = 0; i < 180; i++){
+		//std::cout <<std::endl<<std::endl<<
+				f.farField(i);
+	}
+	timer.stop();
+	std::cout << "far field time:" << timer.interval()<<std::endl;
 	std::cout <<std::endl<<std::endl<< f.field({2,2})<<std::endl
 			<<std::endl<< f.farField(1);
 }
