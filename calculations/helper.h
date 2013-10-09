@@ -2,9 +2,9 @@
 #define HELPER_H_
 #include <math.h>
 #include "array.h"
-#include "matrix.h"
 #include <utility>
 #include "types.h"
+#include "matrix.h"
 /*
 constexpr complex operator"" _i(long double v ) {
   return complex(0, v);

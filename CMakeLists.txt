@@ -30,7 +30,6 @@ set (HEADERS
  ./calculations/discretization.h
  ./calculations/incident_field.h
  ./calculations/incident_field_package.h
- ./calculations/equation_matrix_solver.h
  #./mt/thread.h
  #./mt/parallelism.h
 )
