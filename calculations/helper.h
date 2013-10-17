@@ -60,7 +60,7 @@ double ch1Nodes(const int n, const int i);
 //2nd kind Hankel function
 template<class T = double, class Complex = std::complex<T>>
 Complex h2(const T& x) {
-	return Complex(j0(x), -y0(x));
+	return Complex(_j0(x), -_y0(x));
 }
 
 template<class D>
