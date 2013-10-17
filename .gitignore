@@ -19,6 +19,7 @@
 
 EPol
 
+#eclipse files
 CMakeFiles/
 .cproject
 .project
@@ -26,3 +27,11 @@ CMakeFiles/
 cmake_install.cmake
 CMakeCache.txt
 Makefile
+
+#visual studio files
+*.vcxproj
+*.vcxproj.filters
+*.sln
+Debug/
+EPol.*
+Win32/
