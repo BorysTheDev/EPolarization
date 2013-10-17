@@ -4,6 +4,7 @@
 #include "incident_field.h"
 #include "incident_field_package.h"
 #include "box.h"
+#include "helper.h"
 
 int main(int argc, char** argv) {
   double k = 5 * M_PI;
