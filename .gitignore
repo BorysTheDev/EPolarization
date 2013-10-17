@@ -32,3 +32,6 @@ Makefile
 *.vcxproj
 *.vcxproj.filters
 *.sln
+Debug/
+EPol.*
+Win32/

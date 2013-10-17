@@ -17,7 +17,9 @@ include_directories (./gauss)
 #add_subdirectory(gui)
 add_subdirectory(gauss)
 
-add_definitions (-Wall -pedantic -std=gnu++11 -O2)
+if(CMAKE_COMPILER_IS_GNUCC)
+add_definitions (-Wall -pedantic -std=gnu++11)
+endif()
 
 set (HEADERS 
   ./calculations/calc_manager.h 
