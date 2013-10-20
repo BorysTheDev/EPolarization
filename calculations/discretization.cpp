@@ -1,5 +1,5 @@
 #include "discretization.h"
-
+#include <functional>
 
 Discretization::Discretization(const CurvesList& sCurves,
 		const IncidentFieldsList& fields) : fields(fields), curves(sCurves) {
@@ -37,24 +37,29 @@ ArrayPtr<types::complex> Discretization::createArray() {
 void Discretization::fillMatrixBlock(Matrix<types::complex>& matr,
     size_t i, size_t j, const DiscretizeCurve& c1,
     const DiscretizeCurve& c2, types::real waveNumber) {
-  if (i != j) {
-    //not diagonal blocks
-    for (size_t ii = 0; ii < c1.size(); ii++) {
+  //not diagonal blocks
+  std::function<void(int, int)> notDiagonal = [&](int start, int step) {
+    for (size_t ii = start; ii < c1.size(); ii+=step) {
       for (size_t jj = 0; jj < c2.size(); jj++) {
-        matr[i + ii][j + jj] = (M_PI / c2.size())
-            * h2(waveNumber * dist(c1[ii] ,c2[jj]));
+        matr[i + ii][j + jj] = (M_PI / c2.size()) * h2(waveNumber * dist(c1[ii] ,c2[jj]));
       }
     }
-  } else {
-    //diagonal block
-    for (size_t ii = 0; ii < c1.size(); ii++) {
+  };
+  //diagonal block
+  std::function<void(int, int)> diagonal = [&](int start, int step) {
+    for (size_t ii = start; ii < c1.size(); ii+=step) {
       for (size_t jj = 0; jj < c1.size(); jj++) {
-    	  types::complex temp = ii != jj ? h2(waveNumber * dist(c1[ii], c2[jj]))
-          - epol::asymp(c1[ii].t, c1[jj].t) : epol::lim(c1[ii].d, waveNumber);
-        matr[i + ii][j + jj] = (M_PI / c1.size())
-          * (temp - types::complex(0, 2) * epol::Ln(c1[ii].t, c1[jj].t, c1.size())
-                / M_PI);
+        types::complex temp = ii != jj
+            ? h2(waveNumber * dist(c1[ii], c2[jj])) - epol::asymp(c1[ii].t, c1[jj].t)
+            : epol::lim(c1[ii].d, waveNumber);
+        matr[i + ii][j + jj] = (M_PI / c1.size()) * (temp - types::complex(0, 2) *
+            epol::Ln(c1[ii].t, c1[jj].t, c1.size()) / M_PI);
       }
     }
+  };
+  if (i != j) {
+    notDiagonal(0, 1);
+  } else {
+    diagonal(0, 1);
   }
 }

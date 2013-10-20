@@ -12,14 +12,14 @@ int main(int argc, char** argv) {
 
   DonationBox<Curve> listCurves;
   listCurves << new Line({-1, 4}, {1, 2})
-      /*<< new Parabola(-1 ,1 , 0.5)
+      << new Parabola(-1 ,1 , 0.5)
       << new Line({2, 4}, {3, 2})
       << new Line({4, 4}, {5, 2})
       << new Line({4, 5}, {5, 3})
       << new Line({4, 6}, {5, 4})
       << new Line({4, 7}, {5, 5})
       << new Line({4, 8}, {5, 6})
-      << new Line({2, 5}, {4, 7})*/;
+      << new Line({2, 5}, {4, 7});
   BlackBox<Curve> curvesSimple(listCurves);
 
   EPolarizationField field(k, alpha);

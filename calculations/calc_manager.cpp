@@ -17,7 +17,7 @@ void CalcManager::run(){
 	DonationBox<DiscretizeCurve> discCurves;
 	for (size_t i = 0; i < given.curves.size(); i++)
 		discCurves << new DiscretizeCurve(
-		    given.curves[i], 20, ch1Nodes);
+		    given.curves[i], 100, ch1Nodes);
 
 	Discretization d(discCurves, given.fields);
 
@@ -31,12 +31,12 @@ void CalcManager::run(){
 	timer.stop();
 	std::cout << "fill matrix time:" << timer.interval()<<std::endl;
 	timer.start();
-	gaussBlockScheme(*matr, *x, matr->height(), 30);
+	gaussMTBlockScheme(*matr, *x, matr->height(), 2, 30);
 	timer.stop();
 	std::cout << "calculation time:" << timer.interval()<<std::endl;
 
 	for (size_t i = 0; i < x->size(); i++) {
-		std::cout << (*x)[i] << std::endl;
+		//std::cout << (*x)[i] << std::endl;
 	}
 	timer.start();
 	DonationBox<Array<std::complex<double>>> currents;
