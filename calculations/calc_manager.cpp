@@ -1,6 +1,5 @@
 #include "calc_manager.h"
 #include <iostream>
-#include "equation_matrix_solver.h"
 #include "array.h"
 #include "curve.h"
 #include "incident_field.h"
@@ -11,6 +10,7 @@
 #include "box.h"
 #include "discretize_curve.h"
 #include "field_solver.h"
+#include "gauss.h"
 
 
 void CalcManager::run(){
@@ -23,22 +23,21 @@ void CalcManager::run(){
 
 	std::cout << "Vector x(t_i):" <<std::endl;
 
-	EquationMatrixSolver<std::complex<double>> ems;
-
 	d.createArray();
 	Timer timer;
 	timer.start();
 	auto matr = d.createMatrix();
+	auto x = d.createArray();
 	timer.stop();
 	std::cout << "fill matrix time:" << timer.interval()<<std::endl;
 	timer.start();
-	CArrayPtr<double> x = ems(*matr, *d.createArray());
+	gaussBlockScheme(*matr, *x, matr->height(), 30);
 	timer.stop();
 	std::cout << "calculation time:" << timer.interval()<<std::endl;
 
-	/*for (size_t i = 0; i < x->size(); i++) {
+	for (size_t i = 0; i < x->size(); i++) {
 		std::cout << (*x)[i] << std::endl;
-	}*/
+	}
 	timer.start();
 	DonationBox<Array<std::complex<double>>> currents;
 	size_t p = 0;

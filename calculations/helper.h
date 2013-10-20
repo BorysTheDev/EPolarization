@@ -2,9 +2,9 @@
 #define HELPER_H_
 #include <math.h>
 #include "array.h"
-#include "matrix.h"
 #include <utility>
 #include "types.h"
+#include "matrix.h"
 /*
 constexpr complex operator"" _i(long double v ) {
   return complex(0, v);
@@ -13,6 +13,11 @@ constexpr complex operator"" _i(long double v ) {
 constexpr complex operator"" _i(unsigned long long v ) {
   return complex(0, v);
 }*/
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 
 template<typename T>
 using MatrixPtr = std::shared_ptr<Matrix<T>>;
