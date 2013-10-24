@@ -10,24 +10,29 @@
 #include "types.h"
 
 class Discretization {
-	typedef IncidentFieldPackage IncidentFieldsList;
+	typedef IncidentFieldPackage IncidentFields;
 	typedef Box<DiscretizeCurve> CurvesList;
 
 public:
-	Discretization(const CurvesList& sCurves, const IncidentFieldsList& fields);
+	Discretization(const CurvesList& sCurves, const IncidentFields& fields);
 
 	MatrixPtr<types::complex> createMatrix();
 	ArrayPtr<types::complex> createArray();
 
 private:
-	size_t size;
-	types::real waveNumber;
+	size_t size = 0;
 
-	const IncidentFieldsList& fields;
+
+	const IncidentFields& fields;
 	const CurvesList& curves;
 
-	static void fillMatrixBlock(Matrix<types::complex>& matr, size_t startI, size_t startJ,
-			const DiscretizeCurve& c1, const DiscretizeCurve& c2,types::real);
+	//waveNumber
+	const types::real wN;
+	// contour < border
+	std::vector<int> borders;
+	//left border of contour
+	int leftBorderOf(int c) {return c == 0 ? 0 : borders[c - 1] ;}
+	void fillMatrixBlock(Matrix<types::complex>& matr, size_t c1, size_t c2);
 
 };
 

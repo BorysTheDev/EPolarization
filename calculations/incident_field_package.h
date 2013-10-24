@@ -12,10 +12,10 @@ public:
 		 fields(size), waveNumber_(waveNumber), filled(0) {}
 
 	//functions
-	size_t size() {return fields.size();}
+	size_t size() const {return fields.size();}
 	void addIncidentField(const IncidentField& wave);
 	const IncidentField& operator[](const size_t n)const {return *fields[n];}
-	const types::complex operator()(types::real x1, types::real x2);
+	const types::complex operator()(types::real x1, types::real x2) const;
 	types::real waveNumber()const {return waveNumber_;}
 	//destructor
 	~IncidentFieldPackage();
