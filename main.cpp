@@ -11,7 +11,9 @@ int main(int argc, char** argv) {
   double alpha = 0;
 
   DonationBox<Curve> listCurves;
-  listCurves << new Line({-1, 4}, {1, 2})
+  listCurves << new Line({-1, 4}, {0, 3})
+  <<new Line({-2, -1}, {-2, 1})
+  <<new Line({0, -1}, {0, 1})
       /*<< new Parabola(-1 ,1 , 0.5)
       << new Line({2, 4}, {3, 2})
       << new Line({4, 4}, {5, 2})
