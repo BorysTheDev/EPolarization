@@ -17,7 +17,7 @@ void CalcManager::run(){
 	DonationBox<DiscretizeCurve> discCurves;
 	for (size_t i = 0; i < given.curves.size(); i++)
 		discCurves << new DiscretizeCurve(
-		    given.curves[i], 20, ch1Nodes);
+		    given.curves[i], 3, ch1Nodes);
 
 	Discretization d(discCurves, given.fields);
 
