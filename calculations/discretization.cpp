@@ -13,14 +13,10 @@ Discretization::Discretization(const CurvesList& sCurves,
 
 MatrixPtr<types::complex> Discretization::createMatrix() {
   Matrix<types::complex> *matrix = new Matrix<types::complex>(size);
-  size_t startI = 0;
   for (size_t m = 0; m < curves.size(); m++) {
-    size_t startJ = 0;
     for (size_t n = 0; n < curves.size(); n++) {
       fillMatrixBlock(*matrix, m, n);
-      startJ += curves[n].size();
     }
-    startI += curves[m].size();
   }
   return MatrixPtr<types::complex>(matrix);
 }
