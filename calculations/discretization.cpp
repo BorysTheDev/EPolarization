@@ -1,6 +1,9 @@
 #include "discretization.h"
 #include <functional>
-
+#include <list>
+#include <thread>
+#include <stdexcept>
+#include <algorithm>
 
 Discretization::Discretization(const CurvesList& sCurves,
     const IncidentFields& fields) : fields(fields), curves(sCurves),
@@ -12,13 +15,27 @@ Discretization::Discretization(const CurvesList& sCurves,
   }
 }
 
-MatrixPtr<types::complex> Discretization::createMatrix() {
+MatrixPtr<types::complex> Discretization::createMatrix(int threads) {
+  if (threads < 1) throw std::logic_error("threads can't be less then 1");
   Matrix<types::complex> *matrix = new Matrix<types::complex>(size);
-  for (size_t m = 0; m < curves.size(); m++) {
-    for (size_t n = 0; n < curves.size(); n++) {
-      fillMatrixBlock(*matrix, m, n);
-    }
-  }
+  auto cn = curves.size();
+
+  std::function<void(int, int, int)> fillBlocks =
+      [&](int start, int step, int th) {
+    for (size_t m = start; m < cn; m += step)
+      for (size_t n = 0; n < cn; n++){
+        fillMatrixBlock(*matrix, m, n, th);
+      }
+  };
+
+  int tt = std::min(threads, (int)cn);
+  std::list<std::thread> tasks;
+
+  for (int i = 0; i < tt; i++)
+    tasks.push_back(std::thread(fillBlocks, i, tt, 3));
+
+  for (auto& t : tasks)
+    t.join();
   return MatrixPtr<types::complex>(matrix);
 }
 
@@ -33,8 +50,9 @@ ArrayPtr<types::complex> Discretization::createArray() {
 }
 
 void Discretization::fillMatrixBlock(Matrix<types::complex>& matr,
-    size_t ci1, size_t ci2)
+    size_t ci1, size_t ci2, int threads)
 {
+  if (threads < 1) throw std::logic_error("threads can't be less then 1");
   int i = leftBorderOf(ci1);
   int j = leftBorderOf(ci2);
   const DiscretizeCurve& c1 = curves[ci1];
@@ -42,26 +60,34 @@ void Discretization::fillMatrixBlock(Matrix<types::complex>& matr,
 
   //not diagonal blocks
   std::function<void(int, int)> notDiagonal = [&](int start, int step) {
-    for (size_t ii = 0; ii < c1.size(); ii++, i++) {
+    for (size_t ii = start; ii < c1.size(); ii += step) {
       for (size_t jj = 0; jj < c2.size(); jj++) {
-        matr[i][j + jj] = (M_PI / c2.size()) * h2(wN * dist(c1[ii] ,c2[jj]));
+        matr[i + ii][j + jj] = (M_PI / c2.size()) * h2(wN * dist(c1[ii] ,c2[jj]));
       }
     }
   };
   //diagonal blocks
   std::function<void(int, int)> diagonal = [&](int start, int step) {
-    for (size_t ii = 0; ii < c1.size(); ii++, i++) {
+    for (size_t ii = start; ii < c1.size(); ii += step) {
       for (size_t jj = 0; jj < c1.size(); jj++) {
         types::complex temp = ii != jj ? h2(wN * dist(c1[ii], c2[jj]))
           - epol::asymp(c1[ii].t, c1[jj].t) : epol::lim(c1[ii].d, wN);
-        matr[i][j + jj] = (M_PI / c1.size()) * (temp - types::complex(0, 2)
+        matr[i + ii][j + jj] = (M_PI / c1.size()) * (temp - types::complex(0, 2)
           * epol::Ln(c1[ii].t, c1[jj].t, c1.size()) / M_PI);
       }
     }
   };
+
+  std::list<std::thread> tasks;
   if (i != j) {
-    notDiagonal(0, 1);
+    //notDiagonal(0,1);
+    for (int i = 0; i < threads; i++)
+      tasks.push_back(std::thread(notDiagonal, i, threads));
   } else {
-    diagonal(0, 1);
+    //diagonal(0,1);
+    for (int i = 0; i < threads; i++)
+      tasks.push_back(std::thread(diagonal, i, threads));
   }
+  for (auto& t : tasks)
+    t.join();
 }

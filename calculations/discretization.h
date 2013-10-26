@@ -16,7 +16,7 @@ class Discretization {
 public:
 	Discretization(const CurvesList& sCurves, const IncidentFields& fields);
 
-	MatrixPtr<types::complex> createMatrix();
+	MatrixPtr<types::complex> createMatrix(int threads = 3);
 	ArrayPtr<types::complex> createArray();
 
 private:
@@ -32,7 +32,7 @@ private:
 	std::vector<int> borders;
 	//left border of contour
 	int leftBorderOf(int c) {return c == 0 ? 0 : borders[c - 1] ;}
-	void fillMatrixBlock(Matrix<types::complex>& matr, size_t c1, size_t c2);
+	void fillMatrixBlock(Matrix<types::complex>&, size_t c1, size_t c2, int);
 
 };
 
