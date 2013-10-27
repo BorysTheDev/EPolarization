@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <algorithm>
 
+
 Discretization::Discretization(const CurvesList& sCurves,
     const IncidentFields& fields) : fields(fields), curves(sCurves),
     wN(fields.waveNumber()), borders(sCurves.size())
@@ -32,7 +33,7 @@ MatrixPtr<types::complex> Discretization::createMatrix(int threads) {
   std::list<std::thread> tasks;
 
   for (int i = 0; i < tt; i++)
-    tasks.push_back(std::thread(fillBlocks, i, tt, 3));
+    tasks.push_back(std::thread(fillBlocks, i, tt, (cn/tt)%threads));
 
   for (auto& t : tasks)
     t.join();
@@ -59,35 +60,30 @@ void Discretization::fillMatrixBlock(Matrix<types::complex>& matr,
   const DiscretizeCurve& c2 = curves[ci2];
 
   //not diagonal blocks
-  std::function<void(int, int)> notDiagonal = [&](int start, int step) {
-    for (size_t ii = start; ii < c1.size(); ii += step) {
-      for (size_t jj = 0; jj < c2.size(); jj++) {
-        matr[i + ii][j + jj] = (M_PI / c2.size()) * h2(wN * dist(c1[ii] ,c2[jj]));
-      }
-    }
-  };
-  //diagonal blocks
-  std::function<void(int, int)> diagonal = [&](int start, int step) {
-    for (size_t ii = start; ii < c1.size(); ii += step) {
-      for (size_t jj = 0; jj < c1.size(); jj++) {
-        types::complex temp = ii != jj ? h2(wN * dist(c1[ii], c2[jj]))
-          - epol::asymp(c1[ii].t, c1[jj].t) : epol::lim(c1[ii].d, wN);
-        matr[i + ii][j + jj] = (M_PI / c1.size()) * (temp - types::complex(0, 2)
-          * epol::Ln(c1[ii].t, c1[jj].t, c1.size()) / M_PI);
-      }
-    }
-  };
+  std::function<void(int, int)> block =
+      [&](int start, int step) {
+        if (i != j) {
+          for (size_t ii = start; ii < c1.size(); ii += step) {
+            for (size_t jj = 0; jj < c2.size(); jj++) {
+              matr[i + ii][j + jj] = (M_PI / c2.size()) * h2(wN * dist(c1[ii] ,c2[jj]));
+            }
+          }
+        } else {
+          for (size_t ii = start; ii < c1.size(); ii += step) {
+            for (size_t jj = 0; jj < c2.size(); jj++) {
+              types::complex temp = ii != jj ? h2(wN * dist(c1[ii], c2[jj]))
+              - epol::asymp(c1[ii].t, c1[jj].t) : epol::lim(c1[ii].d, wN);
+              matr[i + ii][j + jj] = (M_PI / c1.size()) * (temp - types::complex(0, 2)
+                  * epol::Ln(c1[ii].t, c1[jj].t, c1.size()) / M_PI);
+            }
+          }
+        }
+      };
 
   std::list<std::thread> tasks;
-  if (i != j) {
-    //notDiagonal(0,1);
-    for (int i = 0; i < threads; i++)
-      tasks.push_back(std::thread(notDiagonal, i, threads));
-  } else {
-    //diagonal(0,1);
-    for (int i = 0; i < threads; i++)
-      tasks.push_back(std::thread(diagonal, i, threads));
-  }
+  for (int i = 0; i < threads; i++)
+    tasks.push_back(std::thread(block, i, threads));
+
   for (auto& t : tasks)
     t.join();
 }

@@ -8,6 +8,30 @@
 #include "discretize_curve.h"
 #include "box.h"
 #include "types.h"
+#include <array>
+#include <atomic>
+/*
+struct SubIndex
+{
+  int m,n,s;
+};
+
+class Index
+{
+public:
+  Index(std::array<int, 2> borders, int start): i(start), borders(borders) {}
+  inline SubIndex getNext();
+private:
+  std::atomic_int i;
+  std::array<int, 2> borders;
+};
+
+SubIndex Index::getNext()
+{
+  int k = i++;
+  int s2 = k / borders[1];
+  return {s2 / borders[0], s2 % borders[0], k % borders[1]};
+}*/
 
 class Discretization {
 	typedef IncidentFieldPackage IncidentFields;
@@ -16,7 +40,7 @@ class Discretization {
 public:
 	Discretization(const CurvesList& sCurves, const IncidentFields& fields);
 
-	MatrixPtr<types::complex> createMatrix(int threads = 3);
+	MatrixPtr<types::complex> createMatrix(int threads = 4);
 	ArrayPtr<types::complex> createArray();
 
 private:
@@ -34,6 +58,7 @@ private:
 	int leftBorderOf(int c) {return c == 0 ? 0 : borders[c - 1] ;}
 	void fillMatrixBlock(Matrix<types::complex>&, size_t c1, size_t c2, int);
 
+	//Index taskIndex;
 };
 
 #endif /* DISCRETIZATION_H_ */
