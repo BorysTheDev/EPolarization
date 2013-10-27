@@ -33,7 +33,7 @@ MatrixPtr<types::complex> Discretization::createMatrix(int threads) {
   std::list<std::thread> tasks;
 
   for (int i = 0; i < tt; i++)
-    tasks.push_back(std::thread(fillBlocks, i, tt, (cn/tt)%threads));
+    tasks.push_back(std::thread(fillBlocks, i, tt, (cn/tt)%threads + 1));
 
   for (auto& t : tasks)
     t.join();

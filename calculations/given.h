@@ -9,6 +9,9 @@
 struct Given{
 	size_t curvesNum;
 	DonationBox<Curve> &curves;
+	int points = 200;
+	int threads = 4;
+	int tileSize = 30;
 	size_t fieldsNum;
 	IncidentFieldPackage &fields;
 	types::real wavenumber;

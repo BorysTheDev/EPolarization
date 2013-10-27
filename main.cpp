@@ -29,6 +29,15 @@ int main(int argc, char** argv) {
   fields.addIncidentField(field);
 
   Given given(k, listCurves, fields);
+  switch (argc)
+    {
+    case 4:
+      given.tileSize = atoi(argv[3]);
+    case 3:
+      given.threads =  atoi(argv[2]);
+    case 2:
+         given.points =  atoi(argv[1]);
+    }
   CalcManager cm(given);
   cm.run();
 }
