@@ -53,5 +53,7 @@ source_group ("Source Files" FILES ${SOURCES})
 add_executable (${PROJECT} ${HEADERS} ${SOURCES})
 
 #target_link_libraries(${PROJECT} qts)
-#target_link_libraries(${PROJECT} pthread)
+if(CMAKE_COMPILER_IS_GNUCC)
+  target_link_libraries(${PROJECT} pthread)
+endif()
 #target_link_libraries(${PROJECT} ${QT_LIBRARIES})
