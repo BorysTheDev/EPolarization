@@ -6,19 +6,21 @@
 #include "curve.h"
 #include "types.h"
 
-struct Given{
-	size_t curvesNum;
-	DonationBox<Curve> &curves;
-	size_t fieldsNum;
-	IncidentFieldPackage &fields;
-	types::real wavenumber;
-	std::vector<size_t> discretizionOrder;
+struct Given
+{
+  size_t curvesNum;
+  DonationBox<Curve> &curves;
+  int points = 200;
+  int threads = 4;
+  int tileSize = 30;
+  size_t fieldsNum;
+  IncidentFieldPackage &fields;
+  types::real wavenumber;
+  std::vector<size_t> discretizionOrder;
 
-	Given(types::real wavenumber, DonationBox<Curve> &curves,
-			IncidentFieldPackage &fields);
+  Given(types::real wavenumber, DonationBox<Curve> &curves,
+      IncidentFieldPackage &fields);
 };
-
-
 
 typedef Given Params;
 

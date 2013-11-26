@@ -17,11 +17,9 @@ void CalcManager::run(){
 	DonationBox<DiscretizeCurve> discCurves;
 	for (size_t i = 0; i < given.curves.size(); i++)
 		discCurves << new DiscretizeCurve(
-		    given.curves[i], 3, ch1Nodes);
+		    given.curves[i], given.points, ch1Nodes);
 
 	Discretization d(discCurves, given.fields);
-
-	std::cout << "Vector x(t_i):" <<std::endl;
 
 	d.createArray();
 	Timer timer;
@@ -31,13 +29,10 @@ void CalcManager::run(){
 	timer.stop();
 	std::cout << "fill matrix time:" << timer.interval()<<std::endl;
 	timer.start();
-	gaussBlockScheme(*matr, *x, matr->height(), 30);
+	gaussScheme(*matr, *x, matr->height());
 	timer.stop();
-	std::cout << "calculation time:" << timer.interval()<<std::endl;
+	std::cout << "SLAE time:" << timer.interval()<<std::endl;
 
-	for (size_t i = 0; i < x->size(); i++) {
-		std::cout << (*x)[i] << std::endl;
-	}
 	timer.start();
 	DonationBox<Array<std::complex<double>>> currents;
 	size_t p = 0;
@@ -52,7 +47,6 @@ void CalcManager::run(){
 
 	FieldSolver f(discCurves, currents, given.wavenumber);
 	for (int i = 0; i < 180; i++){
-		//std::cout <<std::endl<<std::endl<<
 				f.farField(i);
 	}
 	timer.stop();
