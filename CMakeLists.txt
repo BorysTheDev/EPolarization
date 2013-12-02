@@ -11,6 +11,7 @@ project (${PROJECT})
 include_directories (.)
 #include_directories (./gui)
 include_directories (./calculations)
+include_directories (./calculations/curves)
 #include_directories (./mt)
 include_directories (./gauss)
 
@@ -28,7 +29,6 @@ set (HEADERS
   ./calculations/field_solver.h
   ./calculations/helper.h
   ./calculations/array.h
-  ./calculations/curve.h
  ./calculations/discretization.h
  ./calculations/incident_field.h
  ./calculations/incident_field_package.h
@@ -38,7 +38,8 @@ set (HEADERS
 set (SOURCES 
     ./main.cpp
     ./calculations/field_solver.cpp
-    ./calculations/curve.cpp
+    ./calculations/curves/curve.cpp
+    ./calculations/curves/discretize_curve.cpp
     ./calculations/helper.cpp
     ./calculations/given.cpp
     ./calculations/calc_manager.cpp 

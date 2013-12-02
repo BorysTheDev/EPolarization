@@ -7,32 +7,32 @@
 class IncidentField {
 public:
 	//constructor
-	IncidentField(types::real waveNumber, types::real alpha):
+	IncidentField(tps::real waveNumber, tps::real alpha):
 			waveNumber_(waveNumber), alpha_(alpha) {}
 
 	//functions
-	virtual types::complex operator()(types::real x1, types::real x2) const = 0;
+	virtual tps::complex operator()(tps::real x1, tps::real x2) const = 0;
 
 	virtual IncidentField* clone() const = 0;
 
-	types::real waveNumber()const {return waveNumber_;}
+	tps::real waveNumber()const {return waveNumber_;}
 
 	//destructor
 	virtual ~IncidentField() = default;
 
 protected:
-	types::real waveNumber_;
-	types::real alpha_;
+	tps::real waveNumber_;
+	tps::real alpha_;
 };
 
 class EPolarizationField: public IncidentField {
 public:
 	//constructor
-	EPolarizationField(types::real waveNumber, types::real alpha) :
+	EPolarizationField(tps::real waveNumber, tps::real alpha) :
 			IncidentField(waveNumber, alpha) {}
 
 	//functions
-	types::complex operator()(types::real x1, types::real x2)const override;
+	tps::complex operator()(tps::real x1, tps::real x2)const override;
 
 	EPolarizationField* clone() const override {
 		return new EPolarizationField(this->waveNumber_, this->alpha_);}

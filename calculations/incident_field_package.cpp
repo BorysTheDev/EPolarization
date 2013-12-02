@@ -13,8 +13,8 @@ IncidentFieldPackage::~IncidentFieldPackage(){
 	}
 }
 
-const types::complex IncidentFieldPackage::operator()(types::real x1, types::real x2) {
-	types::complex fieldSum = 0;
+const tps::complex IncidentFieldPackage::operator()(tps::real x1, tps::real x2) {
+	tps::complex fieldSum = 0;
 	for (size_t i = 0; i < size(); i++) {
 		fieldSum += (*fields[i])(x1, x2);
 	}

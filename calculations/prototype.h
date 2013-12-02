@@ -11,7 +11,7 @@
 template <class T>
 class Prototype{
 public:
-	virtual T* clone();
+	virtual T* clone() const = 0;
 	virtual ~Prototype(){}
 };
 
