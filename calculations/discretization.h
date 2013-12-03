@@ -4,13 +4,12 @@
 #include "matrix.h"
 #include "helper.h"
 #include "incident_field.h"
-#include "incident_field_package.h"
 #include "discretize_curve.h"
 #include "box.h"
 #include "types.h"
 
 class Discretization {
-	typedef IncidentFieldPackage IncidentFieldsList;
+	typedef std::vector<ProtoPtr<IncidentField> > IncidentFieldsList;
 	typedef Box<crv::DiscretizeCurve> CurvesList;
 
 public:

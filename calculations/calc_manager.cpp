@@ -5,7 +5,6 @@
 #include "incident_field.h"
 #include <vector>
 #include "discretization.h"
-#include "incident_field_package.h"
 #include "timer.h"
 #include "box.h"
 #include "discretize_curve.h"

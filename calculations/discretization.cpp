@@ -3,7 +3,7 @@
 
 Discretization::Discretization(const CurvesList& sCurves,
 		const IncidentFieldsList& fields) : fields(fields), curves(sCurves) {
-	waveNumber = fields.waveNumber();
+	waveNumber = fields[0]->waveNumber();
 	size = 0;
 	for (size_t i =0; i < sCurves.size(); i++)
 		size += sCurves[i].size();
@@ -29,7 +29,7 @@ ArrayPtr<tps::complex> Discretization::createArray() {
 	int ii = 0;
 	for (size_t i = 0; i < curves.size(); i++) {
 		for (size_t j = 0; j < curves[i].size(); j++, ii++)
-			(*f)[ii] = -fields[0](curves[i][j].x, curves[i][j].y);
+			(*f)[ii] = -(*fields[0])(curves[i][j].x, curves[i][j].y);
 	}
 	return ArrayPtr<tps::complex>(f);
 }

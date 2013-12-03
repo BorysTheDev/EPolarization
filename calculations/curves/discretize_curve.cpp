@@ -12,15 +12,13 @@ CurveForDiscretize::CurveForDiscretize(const CurveForDiscretize& dc) :
     curve_(dc.curve().clone()), size_(dc.size()) {
 }
 
-CurveForDiscretize::CurveForDiscretize(CurveForDiscretize&& cd)
-{
-  std::swap(size_, cd.size_);
-  curve_.swap(cd.curve_);
+CurveForDiscretize::CurveForDiscretize(CurveForDiscretize&& cd) :
+    curve_(cd.curve_), size_(cd.size_) {
 }
 
 CurveForDiscretize& CurveForDiscretize::operator=(CurveForDiscretize& cfd)
 {
-  curve_.reset(cfd.curve().clone());
+  curve_ = cfd.curve().clone();
   size_  = cfd.size_;
   return cfd;
 }

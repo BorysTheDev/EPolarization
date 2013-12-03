@@ -27,7 +27,7 @@ public:
   void setSize(size_t size)     { size_ = size; }
 
 protected:
-  std::unique_ptr<const Curve> curve_;
+  ProtoPtr<Curve> curve_;
   int size_;
 };
 

@@ -2,8 +2,6 @@
 #include "calc_manager.h"
 #include "curve.h"
 #include "incident_field.h"
-#include "incident_field_package.h"
-#include "box.h"
 #include "helper.h"
 
 int main(int argc, char** argv) {
@@ -21,9 +19,8 @@ int main(int argc, char** argv) {
       << new Line({4, 8}, {5, 6})
       << new Line({2, 5}, {4, 7})*/;
 
-  EPolarizationField field(k, alpha);
-  IncidentFieldPackage fields(k);
-  fields.addIncidentField(field);
+  std::vector<ProtoPtr<IncidentField> > fields;
+  fields.push_back(new EPolarizationField(k, alpha));
 
   Given given(k, listCurves, fields);
   CalcManager cm(given);

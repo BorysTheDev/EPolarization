@@ -33,7 +33,7 @@ public:
 
 	tps::real length() const override {return len;}
 
-	Line* clone() const override;
+	ProtoPtr<Curve> clone() const override;
 
 private:
 	tps::RPoint p1;
@@ -57,7 +57,7 @@ public:
 
 	tps::real length() const override;
 
-	Parabola* clone() const override;
+	ProtoPtr<Curve> clone() const override;
 
 private:
 	tps::real x1;

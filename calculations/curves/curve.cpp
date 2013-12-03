@@ -23,7 +23,7 @@ real Line::y(real t) const          //given: parameter from -1 to 1
   return p1.y + t_ * sinPhi;
 }
 
-Line* Line::clone() const
+ProtoPtr<Curve> Line::clone() const
 {
   return new Line(p1, p2);
 }
@@ -77,7 +77,7 @@ real Parabola::length() const
   return p * (lengthInt(x2 / p) - lengthInt(x1 / p));
 }
 
-Parabola* Parabola::clone() const
+ProtoPtr<Curve> Parabola::clone() const
 {
   return new Parabola(x1, x2, p);
 }

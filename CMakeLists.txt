@@ -19,7 +19,7 @@ include_directories (./gauss)
 add_subdirectory(gauss)
 
 if(CMAKE_COMPILER_IS_GNUCC)
-add_definitions (-Wall -pedantic -std=gnu++11)
+add_definitions (-Wall -pedantic -std=gnu++11 -g)
 endif()
 
 set (HEADERS 
@@ -31,7 +31,6 @@ set (HEADERS
   ./calculations/array.h
  ./calculations/discretization.h
  ./calculations/incident_field.h
- ./calculations/incident_field_package.h
  #./mt/thread.h
  #./mt/parallelism.h
 )
@@ -45,7 +44,6 @@ set (SOURCES
     ./calculations/calc_manager.cpp 
     ./calculations/discretization.cpp
     ./calculations/incident_field.cpp
-    ./calculations/incident_field_package.cpp
 )
 
 source_group ("Header Files" FILES ${HEADERS})

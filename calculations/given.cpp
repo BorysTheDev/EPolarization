@@ -2,7 +2,8 @@
 #include "helper.h"
 
 Given::Given(tps::real wavenumber,
-    std::vector<crv::CurveForDiscretize>& curves, IncidentFieldPackage &fields) :
+    std::vector<crv::CurveForDiscretize>& curves,
+    std::vector<ProtoPtr<IncidentField> > &fields) :
     curves(curves), fields(fields), wavenumber(wavenumber)
 {
   fieldsNum = fields.size();
