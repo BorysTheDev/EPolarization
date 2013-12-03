@@ -8,13 +8,13 @@
 
 struct Given
 {
-  size_t curvesNum;
   std::vector<crv::CurveForDiscretize> curves;
-  size_t fieldsNum;
   std::vector<ProtoPtr<IncidentField> > fields;
-  tps::real wavenumber;
-  std::vector<size_t> discretizionOrder;
-
+  tps::real wavenumber = 0;
+  //size_t curvesNum = 0;
+  //size_t fieldsNum = 0;
+  //std::vector<size_t> discretizionOrder;
+  Given(){}
   Given(tps::real wavenumber, std::vector<crv::CurveForDiscretize> &curves,
       std::vector<ProtoPtr<IncidentField> > &fields);
 };
@@ -22,6 +22,13 @@ struct Given
 class GivenBuilder
 {
 public:
+
+  void setWavenumber(tps::real);
+  void addCurve(const crv::CurveForDiscretize&);
+  void addField(const ProtoPtr<IncidentField>&);
+
+  Given getGiven() const { return given; }
+
   void reset();
 private:
   Given given;

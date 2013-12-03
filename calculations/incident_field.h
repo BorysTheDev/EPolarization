@@ -15,6 +15,7 @@ public:
 	virtual tps::complex operator()(tps::real x1, tps::real x2) const = 0;
 
 	tps::real waveNumber()const {return waveNumber_;}
+	void setWaveNumber(tps::real wn) {waveNumber_ = wn;}
 
 	//destructor
 	virtual ~IncidentField() = default;
