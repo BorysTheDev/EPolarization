@@ -1,21 +1,26 @@
-cmake_minimum_required (VERSION 2.6.4)
+cmake_minimum_required (VERSION 2.8.11)
 
 set (PROJECT EPol)
 
 project (${PROJECT})
 
-#FIND_PACKAGE(Qt4 REQUIRED)
-#INCLUDE(${QT_USE_FILE})
-#ADD_DEFINITIONS(${QT_DEFINITIONS})
+#-------------QT--------------------------------------
+if(CMAKE_HOST_WIN32)
+set (CMAKE_PREFIX_PATH "C:\\Qt\\Qt5.1.1\\5.1.1\\mingw48_32\\bin")
+endif()
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC ON)
+find_package(Qt5Widgets)
+#-----------------------------------------------------
+
 
 include_directories (.)
-#include_directories (./gui)
+include_directories (./ui)
 include_directories (./calculations)
 include_directories (./calculations/curves)
-#include_directories (./mt)
 include_directories (./gauss)
 
-#add_subdirectory(gui)
 add_subdirectory(gauss)
 
 if(CMAKE_COMPILER_IS_GNUCC)
@@ -31,8 +36,6 @@ set (HEADERS
   ./calculations/array.h
  ./calculations/discretization.h
  ./calculations/incident_field.h
- #./mt/thread.h
- #./mt/parallelism.h
 )
 set (SOURCES 
     ./main.cpp
@@ -44,6 +47,7 @@ set (SOURCES
     ./calculations/calc_manager.cpp 
     ./calculations/discretization.cpp
     ./calculations/incident_field.cpp
+    ./ui/json_ui.cpp
 )
 
 source_group ("Header Files" FILES ${HEADERS})
@@ -51,6 +55,5 @@ source_group ("Source Files" FILES ${SOURCES})
 
 add_executable (${PROJECT} ${HEADERS} ${SOURCES})
 
-#target_link_libraries(${PROJECT} qts)
-#target_link_libraries(${PROJECT} pthread)
-#target_link_libraries(${PROJECT} ${QT_LIBRARIES})
+
+target_link_libraries(${PROJECT} Qt5::Widgets)

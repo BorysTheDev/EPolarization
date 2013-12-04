@@ -35,3 +35,6 @@ Makefile
 Debug/
 EPol.*
 Win32/
+
+#QT
+*automoc.cpp
