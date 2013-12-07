@@ -4,6 +4,10 @@
 namespace crv
 {
 
+CurveForDiscretize::CurveForDiscretize(const Curve& c) :
+  CurveForDiscretize(c, c.length() * 20) {
+}
+
 CurveForDiscretize::CurveForDiscretize(const Curve& c, size_t size) :
     curve_(c.clone()), size_(size) {
 }

@@ -17,6 +17,7 @@ struct ParametricCurvePoint: public tps::RPoint
 class CurveForDiscretize
 {
 public:
+  CurveForDiscretize(const Curve&);
   CurveForDiscretize(const Curve&, size_t size);
   CurveForDiscretize(const CurveForDiscretize&);
   CurveForDiscretize(CurveForDiscretize&&);

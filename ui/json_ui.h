@@ -4,7 +4,8 @@
 #include "given.h"
 #include "curve.h"
 #include <string>
-//#include <QJsonObject>
+#include <QJsonObject>
+#include "discretize_curve.h"
 
 class JsonUI
 {
@@ -12,12 +13,21 @@ public:
   void updateGiven(const std::string);
   //Given getGiven();
 
-  //static Given toGiven(const std::string);
+  static std::vector<Given> jsonToTask(const QByteArray&);
 
 protected:
   //GivenBuilder givenBuilder;
+  static Given jsonToTask(const QJsonObject&);
+  static crv::CurveForDiscretize jsonToCurve(const QJsonValue&);
+  static ProtoPtr<crv::Curve> jsonToLine(const QJsonObject&);
+  static tps::RPoint jsonToPoint(const QJsonValue&);
+  static tps::real jsonToReal(const QJsonValue&);
 
-  //ProtoPtr<crv::Curve> createLine(const QJsonObject&);
+  const char* params = "params";
+  const char* type = "type";
+  const char* curves = "curves";
+  const char* fields = "fields";
+
   //static ProtoPtr<crv::Curve> createParabola(const QJsonObject&);
 };
 

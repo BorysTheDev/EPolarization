@@ -5,9 +5,6 @@ set (PROJECT EPol)
 project (${PROJECT})
 
 #-------------QT--------------------------------------
-if(CMAKE_HOST_WIN32)
-set (CMAKE_PREFIX_PATH "C:\\Qt\\Qt5.1.1\\5.1.1\\mingw48_32\\bin")
-endif()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
@@ -17,6 +14,7 @@ find_package(Qt5Widgets)
 
 include_directories (.)
 include_directories (./ui)
+include_directories (./patterns)
 include_directories (./calculations)
 include_directories (./calculations/curves)
 include_directories (./gauss)
@@ -34,8 +32,11 @@ set (HEADERS
   ./calculations/field_solver.h
   ./calculations/helper.h
   ./calculations/array.h
- ./calculations/discretization.h
- ./calculations/incident_field.h
+  ./calculations/discretization.h
+  ./calculations/incident_field.h
+  ./calculations/incident_field.h
+  ./patterns/prototype.h
+  ./patterns/singleton.h
 )
 set (SOURCES 
     ./main.cpp
