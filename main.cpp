@@ -2,31 +2,61 @@
 #include "calc_manager.h"
 #include "curve.h"
 #include "incident_field.h"
-#include "incident_field_package.h"
-#include "box.h"
-#include "helper.h"
+#include "json_ui.h"
+
+#include<QFile>
+#include<QDebug>
+#include <QJsonObject>
+#include<QJsonDocument>
+#include<QJsonArray>
 
 int main(int argc, char** argv) {
   double k = 5 * M_PI;
   double alpha = 0;
+  std::string param;
+  //Given given;
 
-  DonationBox<Curve> listCurves;
-  listCurves << new Line({-1, 4}, {1, 2})
-      /*<< new Parabola(-1 ,1 , 0.5)
-      << new Line({2, 4}, {3, 2})
-      << new Line({4, 4}, {5, 2})
-      << new Line({4, 5}, {5, 3})
-      << new Line({4, 6}, {5, 4})
-      << new Line({4, 7}, {5, 5})
-      << new Line({4, 8}, {5, 6})
-      << new Line({2, 5}, {4, 7})*/;
-  BlackBox<Curve> curvesSimple(listCurves);
+  JsonUI jui;
+  jui.updateGiven("{\"line\":{\"a\":{\"x\":-1,\"y\":4},"
+                             "\"b\":{\"x\":1,\"y\":2}}}");
 
-  EPolarizationField field(k, alpha);
-  IncidentFieldPackage fields(k);
-  fields.addIncidentField(field);
+  QString val;
+  QFile file;
+  file.setFileName("test.json");
+  file.open(QIODevice::ReadOnly | QIODevice::Text);
+  val = file.readAll();
+  file.close();
+  qWarning() << val;
 
-  Given given(k, listCurves, fields);
+  QJsonDocument d = QJsonDocument::fromJson(val.toUtf8());
+  QJsonObject sett2 = d.object();
+  QJsonValue value = sett2.value(QString("appName"));
+  qWarning() << value;
+  QJsonObject item = value.toObject();
+  qWarning() << ("QJsonObject of description: ") << item;
+
+  /* incase of string value get value and convert into string*/
+  qWarning() << ("QJsonObject[appName] of description: ") << item["description"];
+  QJsonValue subobj = item["description"];
+  qWarning() << subobj.toString();
+
+  /* incase of array get array and convert into string*/
+  qWarning() << ("QJsonObject[appName] of value: ") << item["imp"];
+  QJsonArray test = item["imp"].toArray();
+  qWarning() << test[1].toString();
+
+
+
+
+
+  //std::vector<crv::CurveForDiscretize> listCurves;
+  //listCurves.emplace_back(crv::Line({-1, 4}, {1, 2}), 20);
+  //listCurves.emplace_back(crv::Line({-1, 4}, {1, 2}), 20);
+  //    << new Parabola(-1 ,1 , 0.5);
+
+  std::vector<ProtoPtr<IncidentField> > fields;
+  fields.push_back(new EPolarizationField(k, alpha));
+  Given given(k, JsonUI::jsonToTask(val.toUtf8())[0].curves, fields);
   CalcManager cm(given);
   cm.run();
 }

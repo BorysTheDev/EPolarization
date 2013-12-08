@@ -8,20 +8,20 @@
 #include "helper.h"
 
 class FieldSolver {
-	typedef Box<DiscretizeCurve> CurvesList;
-	typedef Box<Array<types::complex>> CurrentList;
+	typedef Box<crv::DiscretizeCurve> CurvesList;
+	typedef Box<Array<tps::complex>> CurrentList;
 public:
 	FieldSolver(const CurvesList& curves, const CurrentList& currents,
-			types::real k) : curves(curves), currents(currents), waveNumber(k) {
+			tps::real k) : curves(curves), currents(currents), waveNumber(k) {
 	}
-	types::complex field(const types::RPoint& p) const;
+	tps::complex field(const tps::RPoint& p) const;
 
-	types::complex farField(const types::real angle) const;
+	tps::complex farField(const tps::real angle) const;
 private:
 
 	const CurvesList& curves;
 	const CurrentList& currents;
-	const types::real waveNumber;
+	const tps::real waveNumber;
 };
 
 

@@ -1,0 +1,30 @@
+{
+	"task1" : 
+	{
+		"curves" : 
+		{
+			"name1" :
+			{
+				"type" : "line",
+				"params" :  
+				{
+					"a" : {"type" : "point", "x" : -1, "y" : 4},
+					"b" : {"type" : "point", "x" : 1, "y" : 2}
+				},
+				"points_number" : 20
+			}
+		},
+		"fields" : 
+		{
+			"field_name" : 
+			{
+				"type" : "e_polarization",
+				"params" : 
+				{
+					"wavenumber" : 15.7,
+					"alpha" : 0
+				}
+			}
+		}
+	}
+}

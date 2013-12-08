@@ -1,6 +1,6 @@
 #include "field_solver.h"
 #include <iostream>
-using namespace types;
+using namespace tps;
 
 complex FieldSolver::field(const RPoint& p) const {
 	complex sum = 0;

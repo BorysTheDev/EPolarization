@@ -3,11 +3,11 @@
 #include <complex>
 #include "point.h"
 
-namespace types {
+namespace tps {
 
 typedef double real;
 typedef std::complex<double> complex;
-typedef Point<real> RPoint;
+typedef mth::Point<real> RPoint;
 
 }
 

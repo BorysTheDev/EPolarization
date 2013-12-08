@@ -82,16 +82,16 @@ const double gamma = 0.57721566490153286060651209008240243104215933593992;
  * k - wave number
  * d- derivative
  */
-types::complex lim(types::RPoint d, types::real k);
+tps::complex lim(tps::RPoint d, tps::real k);
 
 //ln(t0 - t_) integral
-types::real Ln(const types::real& t0, const types::real& t_, const int n);
+tps::real Ln(const tps::real& t0, const tps::real& t_, const int n);
 
 /* asymptotic for Hankel function
  *
  */
-inline types::complex asymp(const types::real& t, const types::real& tau) {
-	return -(types::complex(0, 2 * log(fabs(t - tau)) / M_PI));
+inline tps::complex asymp(const tps::real& t, const tps::real& tau) {
+	return -(tps::complex(0, 2 * log(fabs(t - tau)) / M_PI));
 }
 
 }
