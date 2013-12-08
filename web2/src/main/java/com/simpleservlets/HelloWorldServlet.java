@@ -15,8 +15,8 @@ public class HelloWorldServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         PrintWriter writer = response.getWriter();
-        Process test = Runtime.getRuntime().exec("help");
-        BufferedReader reader= new BufferedReader(new InputStreamReader(test.getInputStream()));
+       // Process test = Runtime.getRuntime().exec("help");
+       // BufferedReader reader= new BufferedReader(new InputStreamReader(test.getInputStream()));
 
 
         BufferedReader readerBody= new BufferedReader(new InputStreamReader(request.getInputStream()));

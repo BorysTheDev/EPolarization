@@ -40,7 +40,7 @@
 
 function sendJSON (obj) {
 
-    //alert('ax:'+obj.ax+'bx:'+obj.bx+'b:'+obj.b);
+    alert('ax:'+obj.ax+'bx:'+obj.bx+'b:'+obj.b);
     $.ajax({
             type: "POST",
             contentType: "application/json; charset=utf-8",
@@ -48,6 +48,7 @@ function sendJSON (obj) {
             data:   JSON.stringify( obj ),
             //dataType: "json",
             success: function(response){
+                alert(response);
                 $("#result").append( $("<h5>").text(response) ) ;
             }
         });

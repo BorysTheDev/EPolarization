@@ -1,6 +1,5 @@
 <html>
 
-
     <head>
         <script src="jquery-2.0.3.min.js"></script>
         <script type="text/javascript">
@@ -21,6 +20,12 @@
             <input type="text" id="2" value="2"/>
 
         <button onclick="sendJSON({'field1':$('#1').val(),'filed2':$('#2').val()})">  json send  </button>
+
+            <button onclick="sendJSON({'name':'Jhon','surname':'Rambo'})">  json Rambo send  </button>
+
+        <form onsubmit="sendJSON({'name':'Jhon','surname':'Rambo'})" method="post">
+            <input type="submit" value = "SUBMIT">
+        </form>
     </body>
 
 </html>
