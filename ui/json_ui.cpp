@@ -41,17 +41,19 @@ Given JsonUI::jsonToTask(const QJsonObject& job)
     if (ob == "curves"){
       if (jov.isObject()) {
         for (auto curve : jov.toObject()){
-            gbuilder.addCurve(jsonToCurve(curve));
+          gbuilder.addCurve(jsonToCurve(curve));
         }
       } else {
         throw std::logic_error("json curves isn't an object");
       }
-    /*} else if (ob == "wavenumber") {
-      if (jov.isDouble()) {
-        gbuilder.setWavenumber(jov.toDouble());
+    } else if (ob == "fields") {
+      if (jov.isObject()) {
+        for (auto field : jov.toObject()){
+          gbuilder.addField(jsonToIncField(field));
+        }
       } else {
-        throw std::logic_error("not correct json wavenumber");
-      }*/
+        throw std::logic_error("json field isn't an object");
+      }
     } else {
 
     }
@@ -70,12 +72,12 @@ crv::CurveForDiscretize JsonUI::jsonToCurve(const QJsonValue& job)
     throw std::logic_error("json curve isn't an object");
   QJsonObject curve = job.toObject();
 
-  if (!curve["params"].isObject())
-    throw std::logic_error("json curve params isn't an object");
-  QJsonObject curveParams = curve["params"].toObject();
+  if (!curve["constructor"].isObject())
+    throw std::logic_error("json curve constructor isn't an object");
+  QJsonObject curveConstructor = curve["constructor"].toObject();
 
   try{
-    return *curvesFuncs.at(curve["type"].toString())(curveParams);
+    return *curvesFuncs.at(curve["type"].toString())(curveConstructor);
   } catch(std::out_of_range) {
     throw std::logic_error(std::string("undefined curve type"));
   } catch(std::logic_error e) {
@@ -91,6 +93,42 @@ ProtoPtr<crv::Curve> JsonUI::jsonToLine(const QJsonObject& job)
         jsonToPoint(job["b"].toObject()));
   } catch(std::logic_error e) {
     throw std::logic_error(std::string("json line error in ")
+                           + e.what());
+  }
+}
+
+ProtoPtr<IncidentField> JsonUI::jsonToIncField(const QJsonValue& job)
+{
+  typedef ProtoPtr<IncidentField> (*toField)(const QJsonObject&);
+  static std::map<QString, toField> fieldsFuncs= {
+    {"e_polarization", &jsonToEField}
+  };
+
+  if (!job.isObject())
+    throw std::logic_error("json field isn't an object");
+  QJsonObject field = job.toObject();
+
+  if (!field["constructor"].isObject())
+    throw std::logic_error("json field constructor isn't an object");
+  QJsonObject fieldConstructor = field["constructor"].toObject();
+
+  try{
+    return fieldsFuncs.at(field["type"].toString())(fieldConstructor);
+  } catch(std::out_of_range) {
+    throw std::logic_error(std::string("undefined curve type"));
+  } catch(std::logic_error e) {
+    throw std::logic_error(std::string("json curve error in ")
+                           + e.what());
+  }
+}
+
+ProtoPtr<IncidentField> JsonUI::jsonToEField(const QJsonObject& job)
+{
+  try{
+    return new EPolarizationField(jsonToReal(job["wavenumber"]),
+        jsonToReal(job["alpha"]));
+  } catch(std::logic_error e) {
+    throw std::logic_error(std::string("json EField error in ")
                            + e.what());
   }
 }
@@ -122,3 +160,4 @@ ProtoPtr<crv::Curve> JsonUI::createParabola(const QJsonObject& job)
   return new crv::Line({-1, 4}, {1, 2});
 }
 */
+

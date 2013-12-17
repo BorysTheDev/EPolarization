@@ -19,6 +19,9 @@ protected:
   //GivenBuilder givenBuilder;
   static Given jsonToTask(const QJsonObject&);
   static crv::CurveForDiscretize jsonToCurve(const QJsonValue&);
+  static ProtoPtr<IncidentField> jsonToIncField(const QJsonValue&);
+  static ProtoPtr<IncidentField> jsonToEField(const QJsonObject&);
+
   static ProtoPtr<crv::Curve> jsonToLine(const QJsonObject&);
   static tps::RPoint jsonToPoint(const QJsonValue&);
   static tps::real jsonToReal(const QJsonValue&);

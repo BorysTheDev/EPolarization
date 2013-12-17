@@ -27,7 +27,7 @@ void GivenBuilder::addCurve(const crv::CurveForDiscretize& curve)
 
 void GivenBuilder::addField(const ProtoPtr<IncidentField>& field)
 {
-  if (given.fields.size()) {
+  if (!given.fields.size()) {
     given.fields.push_back(field);
     given.wavenumber = field->waveNumber();
   } else if (given.wavenumber == field->waveNumber()) {

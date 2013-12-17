@@ -1,5 +1,7 @@
 #include "calc_manager.h"
 #include <iostream>
+#include <fstream>
+#include <locale>
 #include "array.h"
 #include "curve.h"
 #include "incident_field.h"
@@ -11,6 +13,11 @@
 #include "field_solver.h"
 #include "gauss.h"
 
+template <class charT, charT sep>
+class punct_facet: public std::numpunct<charT> {
+protected:
+    charT do_decimal_point() const { return sep; }
+};
 
 void CalcManager::run(){
 	DonationBox<crv::DiscretizeCurve> discCurves;
@@ -35,7 +42,7 @@ void CalcManager::run(){
 	std::cout << "calculation time:" << timer.interval()<<std::endl;
 
 	for (size_t i = 0; i < x->size(); i++) {
-		std::cout << (*x)[i] << std::endl;
+    //std::cout << (*x)[i] << std::endl;
 	}
 	timer.start();
 	DonationBox<Array<std::complex<double>>> currents;
@@ -50,10 +57,17 @@ void CalcManager::run(){
 	}
 
 	FieldSolver f(discCurves, currents, given.wavenumber);
-	for (int i = 0; i < 180; i++){
-		//std::cout <<std::endl<<std::endl<<
-				f.farField(i);
+  std::ofstream fout("result.csv");
+  for (int i = 0; i < 360; i+=1)
+    fout << i<< ";";
+  fout <<std::endl;
+  fout.imbue(std::locale(fout.getloc(), new punct_facet<char, ','>));
+  for (int i = 0; i < 360; i+=1){
+    //std::cout <<std::endl<<f.farField(i);
+
+    fout << std::abs(f.farField(i*M_PI/180))<< ";";
 	}
+  fout.close();
 	timer.stop();
 	std::cout << "far field time:" << timer.interval()<<std::endl;
 	std::cout <<std::endl<<std::endl<< f.field({2,2})<<std::endl
