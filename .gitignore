@@ -38,4 +38,4 @@ Win32/
 
 #QT
 *automoc.cpp
-CMakeLists.txt.user
+CMakeLists.txt.user*

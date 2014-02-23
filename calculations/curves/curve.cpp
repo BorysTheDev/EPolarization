@@ -82,4 +82,18 @@ ProtoPtr<Curve> Parabola::clone() const
   return new Parabola(x1, x2, p);
 }
 
+UserCurve::UserCurve(const std::string _x, const std::string _y,
+                     const std::string _dx, const std::string _dy,
+                     const std::string _d2x, const std::string _d2y) :
+  str_x(_x), str_y(_y), str_dx(_dx), str_dy(_dy), str_d2x(_d2x), str_d2y(_d2y),
+  _x(_x), _y(_y), _dx(_dx), _dy(_dy), _d2x(_d2x), _d2y(_d2y)
+{
+
+}
+
+ProtoPtr<Curve> UserCurve::clone() const
+{
+  return new UserCurve(str_x, str_y, str_dx, str_dy, str_d2x, str_d2y);
+}
+
 }

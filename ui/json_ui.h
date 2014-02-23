@@ -23,6 +23,7 @@ protected:
   static ProtoPtr<IncidentField> jsonToEField(const QJsonObject&);
 
   static ProtoPtr<crv::Curve> jsonToLine(const QJsonObject&);
+  static ProtoPtr<crv::Curve> jsonToUserCurve(const QJsonObject&);
   static tps::RPoint jsonToPoint(const QJsonValue&);
   static tps::real jsonToReal(const QJsonValue&);
 

@@ -18,11 +18,13 @@ include_directories (./patterns)
 include_directories (./calculations)
 include_directories (./calculations/curves)
 include_directories (./gauss)
+include_directories (./equation_parser)
 
 add_subdirectory(gauss)
+add_subdirectory(equation_parser)
 
 if(CMAKE_COMPILER_IS_GNUCC)
-add_definitions (-Wall -pedantic -std=gnu++11 -g)
+add_definitions (-Wall -pedantic -std=gnu++11)
 endif()
 
 set (HEADERS 
@@ -55,6 +57,8 @@ source_group ("Header Files" FILES ${HEADERS})
 source_group ("Source Files" FILES ${SOURCES})
 
 add_executable (${PROJECT} ${HEADERS} ${SOURCES})
+target_link_libraries(${PROJECT} equation_interpreter)
 
 
 target_link_libraries(${PROJECT} Qt5::Widgets)
+

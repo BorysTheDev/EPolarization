@@ -1,3 +1,6 @@
 [submodule "gauss"]
 	path = gauss
 	url = https://github.com/Equilibrium2702/gauss.git
+[submodule "equation_parser"]
+	path = equation_parser
+	url = git@github.com:Equilibrium2702/equation_parser.git

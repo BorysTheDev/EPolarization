@@ -65,7 +65,7 @@ crv::CurveForDiscretize JsonUI::jsonToCurve(const QJsonValue& job)
 {
   typedef ProtoPtr<crv::Curve> (*toCurve)(const QJsonObject&);
   static std::map<QString, toCurve> curvesFuncs= {
-    {"line", &jsonToLine}
+    {"line", &jsonToLine}, {"userCurve", &jsonToUserCurve}
   };
 
   if (!job.isObject())
@@ -91,6 +91,19 @@ ProtoPtr<crv::Curve> JsonUI::jsonToLine(const QJsonObject& job)
   try{
     return new crv::Line(jsonToPoint(job["a"].toObject()),
         jsonToPoint(job["b"].toObject()));
+  } catch(std::logic_error e) {
+    throw std::logic_error(std::string("json line error in ")
+                           + e.what());
+  }
+}
+
+ProtoPtr<crv::Curve> JsonUI::jsonToUserCurve(const QJsonObject& job)
+{
+  try{
+    return new crv::UserCurve(job["x"].toString().toStdString(),
+                              job["y"].toString().toStdString(),
+                              job["dx"].toString().toStdString(),
+                              job["dy"].toString().toStdString());
   } catch(std::logic_error e) {
     throw std::logic_error(std::string("json line error in ")
                            + e.what());
