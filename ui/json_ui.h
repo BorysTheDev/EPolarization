@@ -6,6 +6,8 @@
 #include <string>
 #include <QJsonObject>
 #include "discretize_curve.h"
+#include <boost/property_tree/ptree.hpp>
+using namespace boost::property_tree;
 
 class JsonUI
 {
@@ -14,6 +16,7 @@ public:
   //Given getGiven();
 
   static std::vector<Given> jsonToTask(const QByteArray&);
+  static std::vector<Given> jsonToTask(const ptree &);
 
 protected:
   //GivenBuilder givenBuilder;
@@ -26,6 +29,17 @@ protected:
   static ProtoPtr<crv::Curve> jsonToUserCurve(const QJsonObject&);
   static tps::RPoint jsonToPoint(const QJsonValue&);
   static tps::real jsonToReal(const QJsonValue&);
+
+
+
+  static Given jsonToTask(const ptree::value_type&);
+  static crv::CurveForDiscretize jsonToCurve(const ptree::value_type&);
+  static ProtoPtr<IncidentField> jsonToIncField(const ptree::value_type&);
+  static ProtoPtr<IncidentField> jsonToEField(const ptree&);
+
+  static ProtoPtr<crv::Curve> jsonToLine(const ptree &);
+  static ProtoPtr<crv::Curve> jsonToUserCurve(const ptree&);
+  static tps::RPoint jsonToPoint(const ptree&);
 
   const char* params = "params";
   const char* type = "type";

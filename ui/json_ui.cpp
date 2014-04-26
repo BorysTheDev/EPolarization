@@ -167,6 +167,145 @@ tps::real JsonUI::jsonToReal(const QJsonValue& job)
   return job.toDouble();
 }
 
+
+
+
+
+std::vector<Given> JsonUI::jsonToTask(const ptree& tree)
+{
+    std::vector<Given> tasks;
+    for(const auto& task : tree.get_child(""))
+    {
+        tasks.push_back(jsonToTask(task));
+    }
+    return tasks;
+}
+
+Given JsonUI::jsonToTask(const ptree::value_type& task)
+{
+    GivenBuilder gbuilder;
+    for(const auto& curve : task.second.get_child("curves."))
+    {
+        if(!curve.second.empty())
+            gbuilder.addCurve(jsonToCurve(curve));
+        else
+            throw std::logic_error("json curve isn't an object");
+    }
+    for(const auto& field : task.second.get_child("fields."))
+    {
+        if(!field.second.empty())
+            gbuilder.addField(jsonToIncField(field));
+        else
+            throw std::logic_error("json field isn't an object");
+    }
+    return gbuilder.getGiven();
+}
+
+crv::CurveForDiscretize JsonUI::jsonToCurve(const ptree::value_type& curve)
+{
+    typedef ProtoPtr<crv::Curve> (*toCurve) (const ptree&);
+    static std::map<std::string, toCurve> curvesFuncs =
+    {
+        {"line", &jsonToLine},
+        {"userCurve", &jsonToUserCurve}
+    };
+
+    if(curve.second.get_child("constructor").empty())
+        throw std::logic_error("json curve constructor isn't an object");
+    try
+    {
+        return *curvesFuncs.at(curve.second.get<std::string>("type")) (curve.second.get_child("constructor"));
+    }
+    catch (std::out_of_range)
+    {
+        throw std::logic_error(std::string("undefined curve type"));
+    }
+    catch (std::logic_error e)
+    {
+        throw std::logic_error(std::string("json curve error in ") + e.what());
+    }
+}
+
+ProtoPtr<crv::Curve> JsonUI::jsonToLine(const ptree& line)
+{
+    try
+    {
+        return new crv::Line(jsonToPoint(line.get_child("a")),
+                             jsonToPoint(line.get_child("b")));
+    }
+    catch(std::logic_error e)
+    {
+        throw std::logic_error(std::string("json line error in ") + e.what());
+    }
+}
+
+ProtoPtr<crv::Curve> JsonUI::jsonToUserCurve(const ptree& curve)
+{
+    try
+    {
+        return new crv::UserCurve(curve.get<std::string>("x"),
+                                  curve.get<std::string>("y"),
+                                  curve.get<std::string>("dx"),
+                                  curve.get<std::string>("dy"));
+    }
+    catch(std::logic_error e)
+    {
+        throw std::logic_error(std::string("json user curve error in ") + e.what());
+    }
+}
+
+ProtoPtr<IncidentField> JsonUI::jsonToIncField(const ptree::value_type& field)
+{
+    typedef ProtoPtr<IncidentField> (*toField) (const ptree&);
+    static std::map<std::string, toField> fieldsFuncs =
+    {
+        {"e_polarization", &jsonToEField}
+    };
+
+   if(field.second.get_child("constructor").empty())
+       throw std::logic_error("json field constructor isn't an object");
+
+   try
+   {
+       return fieldsFuncs.at(field.second.get<std::string>("type")) (field.second.get_child("constructor"));
+   }
+   catch(std::out_of_range)
+   {
+       throw std::logic_error(std::string("undefined curve type"));
+   }
+   catch(std::logic_error e)
+   {
+       throw std::logic_error(std::string("json curve error in ") + e.what());
+   }
+}
+
+ProtoPtr<IncidentField> JsonUI::jsonToEField(const ptree& field)
+{
+    try
+    {
+        return new EPolarizationField(field.get<double>("wavenumber"),
+                                      field.get<double>("alpha"));
+    }
+    catch(std::logic_error e)
+    {
+        throw std::logic_error(std::string("json EField error in ") + e.what());
+    }
+}
+
+tps::RPoint JsonUI::jsonToPoint(const ptree& point)
+{
+    if(point.empty())
+        throw std::logic_error("json point isn't an object");
+    try
+    {
+        return {point.get<double>("x"),
+                point.get<double>("y")};
+    }
+    catch (std::logic_error e)
+    {
+        throw std::logic_error(std::string("json point error in ") + e.what());
+    }
+}
 /*
 ProtoPtr<crv::Curve> JsonUI::createParabola(const QJsonObject& job)
 {
