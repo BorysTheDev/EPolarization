@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
   double k = 5 * M_PI;
   double alpha = 0;
 
-  int curvesNumber = 1;
+  int curvesNumber = 50;
 
 
   if (argc > 1) curvesNumber = atoi(argv[1]);
