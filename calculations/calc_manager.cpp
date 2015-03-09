@@ -11,7 +11,14 @@
 #include "discretize_curve.h"
 #include "field_solver.h"
 #include "gauss.h"
+#include <fstream>
+#include <locale>
 
+template <class charT, charT sep>
+class punct_facet: public std::numpunct<charT> {
+protected:
+    charT do_decimal_point() const { return sep; }
+};
 
 void CalcManager::run(){
 	DonationBox<DiscretizeCurve> discCurves;
@@ -43,14 +50,61 @@ void CalcManager::run(){
 			(*current)[j] = (*x)[p];
 		}
 		currents << current;
-	}
+    }
+////////////////////////////////////////////////////
+    int point_number = 1;
+    std::ofstream current_out_re("current_re_1div2_40.csv");
+    current_out_re.imbue(std::locale(current_out_re.getloc(), new punct_facet<char, ','>));
+    for (int i = 0; i < currents.size(); i++)
+    {
+        for (int j = 0; j < currents[i].size(); j++)
+        {
+            current_out_re << point_number++ << ";";
+        }
+        current_out_re << std::endl;
+        for (int j = 0; j < currents[i].size(); j++)
+        {
+            current_out_re << currents[i][j].real() << ";";
+        }
+        current_out_re << std::endl;
+    }
+   current_out_re.close();
+//////////////////////////////////////////////////////
+   point_number = 1;
+   std::ofstream current_out_im("current_im_1div2_40.csv");
+   current_out_im.imbue(std::locale(current_out_im.getloc(), new punct_facet<char, ','>));
+   for (int i = 0; i < currents.size(); i++)
+   {
+       for (int j = 0; j < currents[i].size(); j++)
+       {
+           current_out_im << point_number++ << ";";
+       }
+       current_out_im << std::endl;
+       for (int j = 0; j < currents[i].size(); j++)
+       {
+           current_out_im << currents[i][j].imag() << ";";
+       }
+       current_out_im << std::endl;
+   }
+   current_out_im.close();
+/////////////////////////////////////////////////////////
+    FieldSolver field_solver(discCurves, currents, given.wavenumber);
 
-	FieldSolver f(discCurves, currents, given.wavenumber);
-	for (int i = 0; i < 180; i++){
-				f.farField(i);
-	}
+    std::ofstream field_out("field_1div2_40.csv");
+    for (int i = 0; i < 360; i+=1)
+    {
+        field_out << i<< ";";
+    }
+    field_out << std::endl;
+    field_out.imbue(std::locale(field_out.getloc(), new punct_facet<char, ','>));
+    for (int i = 0; i < 360; i+=1)
+    {
+        field_out << std::abs(field_solver.farField(i*M_PI/180))<< ";";
+    }
+    field_out.close();
+
 	timer.stop();
 	std::cout << "far field time:" << timer.interval()<<std::endl;
-	std::cout <<std::endl<<std::endl<< f.field({2,2})<<std::endl
-			<<std::endl<< f.farField(1);
+    std::cout <<std::endl<<std::endl<< field_solver.field({2,2})<<std::endl
+            <<std::endl<< field_solver.farField(1);
 }

@@ -6,17 +6,28 @@
 #include "box.h"
 #include "helper.h"
 
+
 int main(int argc, char** argv) {
-  double k = 5 * M_PI;
+  double k = 4 * M_PI;
   double alpha = 0;
 
-  int curvesNumber = 50;
+  int curvesNumber = 7;
 
 
   if (argc > 1) curvesNumber = atoi(argv[1]);
   DonationBox<Curve> listCurves;
   for (int i = 0; i < curvesNumber; i++)
-    listCurves << new Line({-1 + 2 * i, 4}, {0 + 2 * i, 3});
+  {
+    listCurves << new Line({-1 / 7, 0.5 + 1.5 * i}, {-8 / 7, 0.5 + 1.5 * i});
+  }
+  for (int i = 0; i < curvesNumber; i++)
+  {
+    listCurves << new Line({0, 0 + 1.5 * i}, {0, 1 + 1.5 * i});
+  }
+  for (int i = 0; i < curvesNumber - 1; i++)
+  {
+    listCurves << new Line({1 / 7, 1.25 + 1.5 * i}, {8 / 7, 1.25 + 1.5 * i});
+  }
 
   BlackBox<Curve> curvesSimple(listCurves);
 
@@ -33,6 +44,7 @@ int main(int argc, char** argv) {
     case 3:
       given.points = atoi(argv[2]);
     }
+  given.points = 40;
 
   CalcManager cm(given);
   cm.run();

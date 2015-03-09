@@ -9,7 +9,7 @@
 struct Given{
 	size_t curvesNum;
 	DonationBox<Curve> &curves;
-    int points = 100;
+    int points = 40;
 	int threads = 4;
     int tileSize = 60;
 	size_t fieldsNum;
