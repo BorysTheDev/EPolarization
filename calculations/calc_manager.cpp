@@ -52,37 +52,38 @@ void CalcManager::run(){
 		currents << current;
     }
 ////////////////////////////////////////////////////
-    int point_number = 1;
-    std::ofstream current_out_re("current_re_1div2_40.csv");
+    std::ofstream current_out_re("current_re_1div7_140.csv");
     current_out_re.imbue(std::locale(current_out_re.getloc(), new punct_facet<char, ','>));
     for (int i = 0; i < currents.size(); i++)
     {
         for (int j = 0; j < currents[i].size(); j++)
         {
-            current_out_re << point_number++ << ";";
+            current_out_re << discCurves[i][j].t << ";";
         }
         current_out_re << std::endl;
         for (int j = 0; j < currents[i].size(); j++)
         {
-            current_out_re << currents[i][j].real() << ";";
+            auto val = currents[i][j] / sqrt(1 - sqr(discCurves[i][j].t));
+            current_out_re << val.real() << ";";
         }
         current_out_re << std::endl;
     }
    current_out_re.close();
 //////////////////////////////////////////////////////
-   point_number = 1;
-   std::ofstream current_out_im("current_im_1div2_40.csv");
+
+   std::ofstream current_out_im("current_im_1div7_140.csv");
    current_out_im.imbue(std::locale(current_out_im.getloc(), new punct_facet<char, ','>));
    for (int i = 0; i < currents.size(); i++)
    {
        for (int j = 0; j < currents[i].size(); j++)
        {
-           current_out_im << point_number++ << ";";
+           current_out_im << discCurves[i][j].t << ";";
        }
        current_out_im << std::endl;
        for (int j = 0; j < currents[i].size(); j++)
        {
-           current_out_im << currents[i][j].imag() << ";";
+           auto val = currents[i][j] / sqrt(1 - sqr(discCurves[i][j].t));
+           current_out_im << val.imag() << ";";
        }
        current_out_im << std::endl;
    }
@@ -90,7 +91,7 @@ void CalcManager::run(){
 /////////////////////////////////////////////////////////
     FieldSolver field_solver(discCurves, currents, given.wavenumber);
 
-    std::ofstream field_out("field_1div2_40.csv");
+    std::ofstream field_out("field_1div7_140.csv");
     for (int i = 0; i < 360; i+=1)
     {
         field_out << i<< ";";
