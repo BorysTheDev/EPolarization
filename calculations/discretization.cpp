@@ -11,7 +11,7 @@ Discretization::Discretization(const CurvesList& sCurves,
     wN(fields.waveNumber()), borders(sCurves.size())
 {
   for (size_t i = 0; i < sCurves.size(); i++) {
-    size += sCurves[i].size();
+    size += sCurves[i]->size();
     borders[i] = size;
   }
 }
@@ -40,14 +40,14 @@ MatrixPtr<types::complex> Discretization::createMatrix(int threads) {
   return MatrixPtr<types::complex>(matrix);
 }
 
-ArrayPtr<types::complex> Discretization::createArray() {
-  Array<types::complex> *f = new Array<types::complex>(size);
+std::vector<types::complex> Discretization::createArray() {
+  std::vector<types::complex> f(size);
   int ii = 0;
   for (size_t i = 0; i < curves.size(); i++) {
-    for (size_t j = 0; j < curves[i].size(); j++, ii++)
-      (*f)[ii] = -fields(curves[i][j].x, curves[i][j].y);
+    for (size_t j = 0; j < curves[i]->size(); j++, ii++)
+      f[ii] = -fields((*curves[i])[j].x, (*curves[i])[j].y);
   }
-  return ArrayPtr<types::complex>(f);
+  return f;
 }
 
 void Discretization::fillMatrixBlock(Matrix<types::complex>& matr,
@@ -56,8 +56,8 @@ void Discretization::fillMatrixBlock(Matrix<types::complex>& matr,
   if (threads < 1) throw std::logic_error("threads can't be less then 1");
   int i = leftBorderOf(ci1);
   int j = leftBorderOf(ci2);
-  const DiscretizeCurve& c1 = curves[ci1];
-  const DiscretizeCurve& c2 = curves[ci2];
+  const DiscretizeCurve& c1 = *curves[ci1];
+  const DiscretizeCurve& c2 = *curves[ci2];
 
   //not diagonal blocks
   std::function<void(int, int)> block =

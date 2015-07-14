@@ -3,13 +3,14 @@
 #include "incident_field.h"
 #include <stdexcept>
 #include "types.h"
+#include <memory>
 
 class IncidentFieldPackage {
 public:
-	typedef Array<const IncidentField*> IncidentFields;
+    typedef std::vector<std::unique_ptr<IncidentField>> IncidentFields;
 	//constructors
-	explicit IncidentFieldPackage(types::real waveNumber, size_t size = 1) :
-		 fields(size), waveNumber_(waveNumber), filled(0) {}
+    explicit IncidentFieldPackage(types::real waveNumber) :
+         waveNumber_(waveNumber), filled(0) {}
 
 	//functions
 	size_t size() const {return fields.size();}

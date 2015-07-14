@@ -3,10 +3,13 @@
 #include "point.h"
 #include <cmath>
 #include "types.h"
+#include <memory>
 
 //realODO it's must be spline or general function
 class Curve {
 public:
+    typedef std::unique_ptr<Curve> Ptr;
+
 	virtual types::real x(types::real t) const = 0;
 	virtual types::real y(types::real t) const = 0;
 	virtual types::real dx(types::real t) const = 0;

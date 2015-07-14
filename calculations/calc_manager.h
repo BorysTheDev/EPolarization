@@ -5,12 +5,12 @@
 
 class CalcManager {
 public:
-	CalcManager(Given params): given(params){}
+    CalcManager(Given&& params): given(std::move(params)){}
 
 	void run();
 
 private:
-	Given given;
+    Given&& given;
 };
 
 

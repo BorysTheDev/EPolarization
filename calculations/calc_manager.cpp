@@ -1,13 +1,11 @@
 #include "calc_manager.h"
 #include <iostream>
-#include "array.h"
 #include "curve.h"
 #include "incident_field.h"
 #include <vector>
 #include "discretization.h"
 #include "incident_field_package.h"
 #include "timer.h"
-#include "box.h"
 #include "discretize_curve.h"
 #include "field_solver.h"
 #include "gauss.h"
@@ -21,10 +19,10 @@ protected:
 };
 
 void CalcManager::run(){
-	DonationBox<DiscretizeCurve> discCurves;
+    std::vector<DiscretizeCurve::Ptr> discCurves;
 	for (size_t i = 0; i < given.curves.size(); i++)
-		discCurves << new DiscretizeCurve(
-		    given.curves[i], given.points, ch1Nodes);
+        discCurves.emplace_back( new DiscretizeCurve(
+            *given.curves[i], given.points, ch1Nodes) );
 
 	Discretization d(discCurves, given.fields);
 
@@ -36,34 +34,33 @@ void CalcManager::run(){
 	timer.stop();
 	std::cout << "fill matrix time:" << timer.interval()<<std::endl;
 	timer.start();
-	gaussMTBlockScheme(*matr, *x, matr->height(), given.threads, given.tileSize);
+    gaussMTBlockScheme(*matr, x, matr->height(), given.threads, given.tileSize);
 	timer.stop();
 	std::cout << "SLAE time:" << timer.interval()<<std::endl;
 
 	timer.start();
-	DonationBox<Array<std::complex<double>>> currents;
+    std::vector<std::vector<std::complex<double>>> currents;
 	size_t p = 0;
 	for (size_t i = 0; i < discCurves.size(); i++) {
-		Array<std::complex<double>>* current =
-				new Array<std::complex<double>>(discCurves[i].size());
-		for (size_t j = 0; j < discCurves[i].size(); j++, p++) {
-			(*current)[j] = (*x)[p];
+        std::vector<std::complex<double>> current(discCurves[i]->size());
+        for (size_t j = 0; j < discCurves[i]->size(); j++, p++) {
+            current[j] = x[p];
 		}
-		currents << current;
+        currents.emplace_back(std::move(current));
     }
 ////////////////////////////////////////////////////
     std::ofstream current_out_re("current_re_1div7_140.csv");
     current_out_re.imbue(std::locale(current_out_re.getloc(), new punct_facet<char, ','>));
-    for (int i = 0; i < currents.size(); i++)
+    for (size_t i = 0; i < currents.size(); i++)
     {
-        for (int j = 0; j < currents[i].size(); j++)
+        for (size_t j = 0; j < currents[i].size(); j++)
         {
-            current_out_re << discCurves[i][j].t << ";";
+            current_out_re << (*discCurves[i])[j].t << ";";
         }
         current_out_re << std::endl;
-        for (int j = 0; j < currents[i].size(); j++)
+        for (size_t j = 0; j < currents[i].size(); j++)
         {
-            auto val = currents[i][j] / sqrt(1 - sqr(discCurves[i][j].t));
+            auto val = currents[i][j] / sqrt(1 - sqr((*discCurves[i])[j].t));
             current_out_re << val.real() << ";";
         }
         current_out_re << std::endl;
@@ -73,16 +70,16 @@ void CalcManager::run(){
 
    std::ofstream current_out_im("current_im_1div7_140.csv");
    current_out_im.imbue(std::locale(current_out_im.getloc(), new punct_facet<char, ','>));
-   for (int i = 0; i < currents.size(); i++)
+   for (size_t i = 0; i < currents.size(); i++)
    {
-       for (int j = 0; j < currents[i].size(); j++)
+       for (size_t j = 0; j < currents[i].size(); j++)
        {
-           current_out_im << discCurves[i][j].t << ";";
+           current_out_im << (*discCurves[i])[j].t << ";";
        }
        current_out_im << std::endl;
-       for (int j = 0; j < currents[i].size(); j++)
+       for (size_t j = 0; j < currents[i].size(); j++)
        {
-           auto val = currents[i][j] / sqrt(1 - sqr(discCurves[i][j].t));
+           auto val = currents[i][j] / sqrt(1 - sqr((*discCurves[i])[j].t));
            current_out_im << val.imag() << ";";
        }
        current_out_im << std::endl;
