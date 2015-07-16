@@ -35,3 +35,5 @@ Makefile
 Debug/
 EPol.*
 Win32/
+
+CMakeLists.txt.user*

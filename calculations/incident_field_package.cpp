@@ -6,15 +6,11 @@ void IncidentFieldPackage::addIncidentField(const IncidentField& wave)
 {
   if (wave.waveNumber() != waveNumber_)
     throw std::logic_error("not correct wave number");
-  fields[filled++] = wave.clone();
+  fields.emplace_back(wave.clone());
 }
 
 IncidentFieldPackage::~IncidentFieldPackage()
 {
-  for (size_t i = 0; i < fields.size(); i++) {
-    if (fields[i])
-      delete fields[i];
-  }
 }
 
 const complex IncidentFieldPackage::operator()(real x1, real x2) const
