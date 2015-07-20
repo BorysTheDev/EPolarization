@@ -1,7 +1,7 @@
 #ifndef DISCRETIZE_CURVE_H_
 #define DISCRETIZE_CURVE_H_
-#include "array.h"
 #include "curve.h"
+#include <vector>
 
 template<class T>
 struct ParametricCurvePoint: public Point<T>
@@ -12,6 +12,7 @@ struct ParametricCurvePoint: public Point<T>
 
 class DiscretizeCurve{
 public:
+    typedef std::unique_ptr<DiscretizeCurve> Ptr;
 	template<class PointGen>
 	DiscretizeCurve(const Curve&, size_t size, PointGen func);
 
@@ -19,7 +20,7 @@ public:
 	size_t size() const {return points.size();}
 
 private:
-	Array<ParametricCurvePoint<types::real>> points;
+        std::vector<ParametricCurvePoint<types::real>> points;
 	DiscretizeCurve(const DiscretizeCurve&) = delete;
 	const DiscretizeCurve& operator= (const DiscretizeCurve&) = delete;
 };
