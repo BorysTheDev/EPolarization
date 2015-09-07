@@ -9,6 +9,7 @@ project (${PROJECT})
 #ADD_DEFINITIONS(${QT_DEFINITIONS})
 
 include_directories (.)
+include_directories (./curves)
 #include_directories (./gui)
 include_directories (./calculations)
 #include_directories (./mt)
@@ -22,28 +23,37 @@ add_definitions (-Wall -pedantic -std=gnu++11 -O2)
 endif()
 
 set (HEADERS 
+  ./types.h
+
+  ./curves/curve.h
+  ./curves/ellipse.h
+  ./curves/discretize_curve.h
+
   ./calculations/calc_manager.h 
-  ./calculations/types.h
+
   ./calculations/given.h
   ./calculations/field_solver.h
   ./calculations/helper.h
-  ./calculations/curve.h
- ./calculations/discretization.h
- ./calculations/incident_field.h
- ./calculations/incident_field_package.h
- #./mt/thread.h
- #./mt/parallelism.h
+  ./calculations/discretization.h
+  ./calculations/incident_field.h
+  ./calculations/incident_field_package.h
+
+
 )
+
 set (SOURCES 
-    ./main.cpp
-    ./calculations/field_solver.cpp
-    ./calculations/curve.cpp
-    ./calculations/helper.cpp
-    ./calculations/given.cpp
-    ./calculations/calc_manager.cpp 
-    ./calculations/discretization.cpp
-    ./calculations/incident_field.cpp
-    ./calculations/incident_field_package.cpp
+  ./curves/curve.cpp
+  ./curves/ellipse.cpp
+
+  ./main.cpp
+  ./calculations/field_solver.cpp
+
+  ./calculations/helper.cpp
+  ./calculations/given.cpp
+  ./calculations/calc_manager.cpp
+  ./calculations/discretization.cpp
+  ./calculations/incident_field.cpp
+  ./calculations/incident_field_package.cpp
 )
 
 source_group ("Header Files" FILES ${HEADERS})
