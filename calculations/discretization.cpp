@@ -87,3 +87,20 @@ void Discretization::fillMatrixBlock(Matrix<types::complex>& matr,
   for (auto& t : tasks)
     t.join();
 }
+
+MatrixPtr<types::complex> Discretization::createHMatrix()
+{
+    auto matrix = new Matrix<types::complex>(size);
+    Matrix<types::complex>& matr = *matrix;
+
+    auto& curve = curves[0];
+
+    for (int row = 0; row < curve->size(); row++)
+    {
+        for (int col = 0; col < curve->size(); col++)
+        {
+
+        }
+    }
+    return MatrixPtr<types::complex>(matrix);
+}

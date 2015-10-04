@@ -38,7 +38,10 @@ set (HEADERS
   ./calculations/incident_field.h
   ./calculations/incident_field_package.h
 
+  ./hpolarization/h_core.h
 
+  ./math/hankel.h
+  ./math/simple_math.h
 )
 
 set (SOURCES 
@@ -54,6 +57,8 @@ set (SOURCES
   ./calculations/discretization.cpp
   ./calculations/incident_field.cpp
   ./calculations/incident_field_package.cpp
+
+ ./hpolarization/h_core.cpp
 )
 
 source_group ("Header Files" FILES ${HEADERS})

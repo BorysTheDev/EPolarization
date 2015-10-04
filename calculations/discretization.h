@@ -16,6 +16,7 @@ public:
 	Discretization(const CurvesList& sCurves, const IncidentFields& fields);
 
 	MatrixPtr<types::complex> createMatrix(int threads = 4);
+    MatrixPtr<types::complex> createHMatrix();
     std::vector<types::complex> createArray();
 
 private:
