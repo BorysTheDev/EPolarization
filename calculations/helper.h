@@ -37,19 +37,19 @@ T ch1(int n, const T& x) {
 	return cos(n * acos(x));
 }
 
-template<class T>
-T sqr(const T& base) {
-	return base * base;
-}
+//template<class T>
+//T sqr(const T& base) {
+//	return base * base;
+//}
 
 //1st kind Chebyshev nodes
 double ch1Nodes(const int n, const int i);
 
 //2nd kind Hankel function
-template<class T = double, class Complex = std::complex<T>>
-Complex h2(const T& x) {
-	return Complex(j0(x), -y0(x));
-}
+//template<class T = double, class Complex = std::complex<T>>
+//Complex h2(const T& x) {
+//	return Complex(j0(x), -y0(x));
+//}
 
 template<class D>
 auto sum(D data, int s, int e) -> decltype(std::declval<D>()(s)) {

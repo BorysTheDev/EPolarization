@@ -4,10 +4,14 @@
 #include <thread>
 #include <stdexcept>
 #include <algorithm>
+#include <hpolarization/h_core.h>
+#include "math/hankel.h"
+#include "iostream"
 
+using namespace mth;
 
-Discretization::Discretization(const CurvesList& sCurves,
-    const IncidentFields& fields) : fields(fields), curves(sCurves),
+Discretization::Discretization(const CurvesList& sCurves, const CurvesList& sCurvesFi0,
+    const IncidentFields& fields) : fields(fields), curvesFi(sCurves), curvesFi0(sCurvesFi0),
     wN(fields.waveNumber()), borders(sCurves.size())
 {
   for (size_t i = 0; i < sCurves.size(); i++) {
@@ -19,7 +23,7 @@ Discretization::Discretization(const CurvesList& sCurves,
 MatrixPtr<types::complex> Discretization::createMatrix(int threads) {
   if (threads < 1) throw std::logic_error("threads can't be less then 1");
   Matrix<types::complex> *matrix = new Matrix<types::complex>(size);
-  auto cn = curves.size();
+  auto cn = curvesFi.size();
 
   std::function<void(int, int, int)> fillBlocks =
       [&](int start, int step, int th) {
@@ -43,9 +47,9 @@ MatrixPtr<types::complex> Discretization::createMatrix(int threads) {
 std::vector<types::complex> Discretization::createArray() {
   std::vector<types::complex> f(size);
   int ii = 0;
-  for (size_t i = 0; i < curves.size(); i++) {
-    for (size_t j = 0; j < curves[i]->size(); j++, ii++)
-      f[ii] = -fields((*curves[i])[j].x, (*curves[i])[j].y);
+  for (size_t i = 0; i < curvesFi.size(); i++) {
+    for (size_t j = 0; j < curvesFi[i]->size(); j++, ii++)
+      f[ii] = -fields((*curvesFi[i])[j].x, (*curvesFi[i])[j].y);
   }
   return f;
 }
@@ -56,8 +60,8 @@ void Discretization::fillMatrixBlock(Matrix<types::complex>& matr,
   if (threads < 1) throw std::logic_error("threads can't be less then 1");
   int i = leftBorderOf(ci1);
   int j = leftBorderOf(ci2);
-  const DiscretizeCurve& c1 = *curves[ci1];
-  const DiscretizeCurve& c2 = *curves[ci2];
+  const DiscretizeCurve& c1 = *curvesFi[ci1];
+  const DiscretizeCurve& c2 = *curvesFi[ci2];
 
   //not diagonal blocks
   std::function<void(int, int)> block =
@@ -90,16 +94,23 @@ void Discretization::fillMatrixBlock(Matrix<types::complex>& matr,
 
 MatrixPtr<types::complex> Discretization::createHMatrix()
 {
+    using namespace hpl;
     auto matrix = new Matrix<types::complex>(size);
     Matrix<types::complex>& matr = *matrix;
 
-    auto& curve = curves[0];
+    SPCPoint& pt = (*curvesFi[0])[1];
+    SPCPoint& pt0 = (*curvesFi0[0])[1];
+    int n = curvesFi[0]->size() / 2;
+    std::cout << "B     " << B(pt, wN) << std::endl
+              << "Hyper " << Hyper(pt0, pt, n) << std::endl
+              << "Log   " << Log(pt, pt0, n) << std::endl
+              << "Smooth" << Smooth(pt, pt0, wN) << std::endl;
 
-    for (int row = 0; row < curve->size(); row++)
+    for (size_t row = 0; row < curve.size(); row++)
     {
-        for (int col = 0; col < curve->size(); col++)
+        for (size_t col = 0; col < curve.size(); col++)
         {
-
+            matr[row][col] = hpl::H(curve[row], curve[col], wN, curve.size() / 2);
         }
     }
     return MatrixPtr<types::complex>(matrix);

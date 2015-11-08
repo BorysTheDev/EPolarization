@@ -11,6 +11,10 @@
 #include "gauss.h"
 #include <fstream>
 #include <locale>
+#include "math/simple_math.h"
+#include "hpolarization/h_core.h"
+
+using namespace mth;
 
 template <class charT, charT sep>
 class punct_facet: public std::numpunct<charT> {
@@ -24,12 +28,12 @@ void CalcManager::run(){
         discCurves.emplace_back( new DiscretizeCurve(
             *given.curves[i], given.points, ch1Nodes) );
 
-	Discretization d(discCurves, given.fields);
+    Discretization d(discCurves, discCurves, given.fields);
 
 	d.createArray();
 	Timer timer;
 	timer.start();
-	auto matr = d.createMatrix(given.threads);
+    auto matr = d.createHMatrix(/*given.threads*/);
 	auto x = d.createArray();
 	timer.stop();
 	std::cout << "fill matrix time:" << timer.interval()<<std::endl;
@@ -105,4 +109,19 @@ void CalcManager::run(){
 	std::cout << "far field time:" << timer.interval()<<std::endl;
     std::cout <<std::endl<<std::endl<< field_solver.field({2,2})<<std::endl
             <<std::endl<< field_solver.farField(1);
+}
+
+
+void CalcManager::calcH()
+{
+    std::vector<DiscretizeCurve::Ptr> discCurvesFi;
+    std::vector<DiscretizeCurve::Ptr> discCurvesFi0;
+    for (size_t i = 0; i < given.curves.size(); i++)
+    {
+        discCurvesFi.emplace_back( new DiscretizeCurve(*given.curves[i], given.points, hpl::Fi) );
+        discCurvesFi0.emplace_back( new DiscretizeCurve(*given.curves[i], given.points, hpl::Fi0) );
+    }
+
+    Discretization d(discCurvesFi, discCurvesFi0, given.fields);
+    d.createHMatrix();
 }

@@ -1,4 +1,7 @@
 #include "helper.h"
+#include "math/simple_math.h"
+
+using namespace mth;
 
 double ch1Nodes(const int n, const int i) {
 	return cos((2.0 * i + 1.0) * M_PI / (2.0 * n));

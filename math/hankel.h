@@ -10,13 +10,13 @@ namespace mth {
 template<class T, class Complex = std::complex<T>>
 Complex h2(const T& x)
 {
-  return std::complex<double>(_j0(x), -_y0(x));
+  return Complex(_j0(x), -_y0(x));
 }
 
 template<class T, class Complex = std::complex<T>>
 Complex h2(const int n, const T& x)
 {
-  return std::complex<double>(_jn(n, x), -_yn(n, x));
+  return Complex(_jn(n, x), -_yn(n, x));
 }
 
 }

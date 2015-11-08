@@ -1,6 +1,9 @@
 #include "field_solver.h"
 #include <iostream>
+#include "math/hankel.h"
+
 using namespace types;
+using namespace mth;
 
 complex FieldSolver::field(const RPoint& p) const {
 	complex sum = 0;

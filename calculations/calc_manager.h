@@ -8,6 +8,7 @@ public:
     CalcManager(Given&& params): given(std::move(params)){}
 
 	void run();
+    void calcH();
 
 private:
     Given&& given;

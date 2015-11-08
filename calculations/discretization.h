@@ -13,7 +13,7 @@ class Discretization {
     typedef std::vector<DiscretizeCurve::Ptr> CurvesList;
 
 public:
-	Discretization(const CurvesList& sCurves, const IncidentFields& fields);
+    Discretization(const CurvesList& sCurvesFi, const CurvesList& sCurvesFi0, const IncidentFields& fields);
 
 	MatrixPtr<types::complex> createMatrix(int threads = 4);
     MatrixPtr<types::complex> createHMatrix();
@@ -24,7 +24,9 @@ private:
 
 
 	const IncidentFields& fields;
-	const CurvesList& curves;
+    const CurvesList& curvesFi;
+    const CurvesList& curvesFi0;
+
 
 	//waveNumber
 	const types::real wN;
