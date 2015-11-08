@@ -13,6 +13,16 @@ inline T sqr(const T& base)
   return base * base;
 }
 
+//needs to change another dists to this dist
+namespace nta
+{
+template<class T>
+inline T dist(const T& x,const T& y )
+{
+  return sqrt( sqr(x) + sqr(y) );
+}
+}
+
 }
 
 #endif /* SIMPLE_MATH_H_ */

@@ -30,10 +30,10 @@ void CalcManager::run(){
 
     Discretization d(discCurves, discCurves, given.fields);
 
-	d.createArray();
+    d.createArray();
 	Timer timer;
 	timer.start();
-    auto matr = d.createHMatrix(/*given.threads*/);
+    auto matr = d.createMatrix(/*given.threads*/);
 	auto x = d.createArray();
 	timer.stop();
 	std::cout << "fill matrix time:" << timer.interval()<<std::endl;
@@ -123,5 +123,9 @@ void CalcManager::calcH()
     }
 
     Discretization d(discCurvesFi, discCurvesFi0, given.fields);
-    d.createHMatrix();
+
+    auto matr = d.createHMatrix(/*given.threads*/);
+    auto x = d.createHArray();
+
+    gaussMTBlockScheme(*matr, x, matr->height(), given.threads, given.tileSize);
 }

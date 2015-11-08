@@ -120,7 +120,14 @@ static types::complex H(const SPCPoint& ptau, const SPCPoint& pt, double wN, int
 
 }
 
-
+static types::complex ET(const SPCPoint& ptau, double wN, double alpha)
+{
+    double distance = nta::dist(ptau.d.x, ptau.d.y);
+    types::complex e_arg( 0, wN * (sin(alpha) * ptau.x - cos(alpha) * ptau.y) );
+    types::complex e = exp(e_arg) / distance;
+    types::complex et = e * wN * ( ptau.d.x * cos(alpha) + ptau.d.y * sin(alpha));
+    return 4 * distance * et;
+}
 
 
 }

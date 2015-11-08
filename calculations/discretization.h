@@ -18,6 +18,7 @@ public:
 	MatrixPtr<types::complex> createMatrix(int threads = 4);
     MatrixPtr<types::complex> createHMatrix();
     std::vector<types::complex> createArray();
+    std::vector<types::complex> createHArray();
 
 private:
 	size_t size = 0;
