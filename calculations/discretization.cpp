@@ -111,7 +111,7 @@ MatrixPtr<types::complex> Discretization::createHMatrix()
     {
         for (size_t col = 0; col < curvesFi[0]->size(); col++)
         {
-            matr[row][col] = hpl::H((*curvesFi0[0])[row], (*curvesFi0[0])[col], wN, n);
+            matr[row][col] = hpl::H((*curvesFi0[0])[row], (*curvesFi[0])[col], wN, n);
         }
     }
     return MatrixPtr<types::complex>(matrix);

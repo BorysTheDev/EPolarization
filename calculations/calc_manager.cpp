@@ -14,6 +14,7 @@
 #include "math/simple_math.h"
 #include "hpolarization/h_core.h"
 
+
 using namespace mth;
 
 template <class charT, charT sep>
@@ -125,7 +126,13 @@ void CalcManager::calcH()
     Discretization d(discCurvesFi, discCurvesFi0, given.fields);
 
     auto matr = d.createHMatrix(/*given.threads*/);
+    //writeMatrix("matrix.txt", *matr, matr->height());
     auto x = d.createHArray();
 
-    gaussMTBlockScheme(*matr, x, matr->height(), given.threads, given.tileSize);
+    gaussScheme(*matr, x, matr->height());
+    for (size_t i = 0; i < matr->height(); i++)
+    {
+        std::cout << std::endl << x[i];
+    }
+
 }

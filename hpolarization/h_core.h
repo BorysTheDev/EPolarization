@@ -77,11 +77,13 @@ static types::complex Smooth(const SPCPoint& ptau, const SPCPoint& pt, double wN
 
 static double Fi(int n, int col)
 {
+    n--;//needs to improve algorithm
     return 2 * M_PI * col / (n + 1);
 }
 
 static double Fi0(int n, int row)
 {
+    n--;
     return (2 * row + 1) * M_PI / (n + 1);
 }
 

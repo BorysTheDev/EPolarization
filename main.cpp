@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
     case 3:
       given.points = atoi(argv[2]);
     }
-  given.points = 80;
+  given.points = 81; //need to be always odd
 
   CalcManager cm(std::move(given));
 //  cm.run();
