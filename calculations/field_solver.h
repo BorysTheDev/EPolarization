@@ -15,7 +15,11 @@ public:
 	types::complex field(const types::RPoint& p) const;
 
 	types::complex farField(const types::real angle) const;
+
+    types::complex farHField(const types::real angle) const;
 private:
+
+    types::complex S4(double  psi, const SPCPoint& pt) const;
 
 	const CurvesList& curves;
 	const CurrentList& currents;

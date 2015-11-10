@@ -130,9 +130,38 @@ void CalcManager::calcH()
     auto x = d.createHArray();
 
     gaussScheme(*matr, x, matr->height());
-    for (size_t i = 0; i < matr->height(); i++)
+    std::vector<std::vector<types::complex>> currents;
+    currents.push_back(x);
+//    for (size_t i = 0; i < matr->height(); i++)
+//    {
+//        std::cout << std::endl << x[i];
+//    }
+//////////////////////////////////////////////////////////////////////
+    std::ofstream current_re("current_re.csv");
+    current_re.imbue(std::locale(current_re.getloc(), new punct_facet<char, ','>));
+    for (size_t i = 0; i < x.size(); ++i)
     {
-        std::cout << std::endl << x[i];
+         current_re <<(*discCurvesFi0[0])[i].t << ";";
     }
+    current_re << std::endl;
+    for (size_t i = 0; i < x.size(); ++i)
+    {
+         current_re << x[i].real() << ";";
+    }
+/////////////////////////////////////////////////////////////////////
+    FieldSolver field_solver(discCurvesFi, currents, given.wavenumber);
+
+    std::ofstream field_out("field_test.csv");
+    for (double i = 0; i < 360; i += 0.5)
+    {
+        field_out << i<< ";";
+    }
+    field_out << std::endl;
+    field_out.imbue(std::locale(field_out.getloc(), new punct_facet<char, ','>));
+    for (double i = 0; i < 360; i += 0.5)
+    {
+        field_out << std::abs(field_solver.farHField(i*M_PI/180))<< ";";
+    }
+    field_out.close();
 
 }

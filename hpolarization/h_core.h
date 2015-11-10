@@ -12,8 +12,6 @@ using namespace mth;
 
 //DComplex smoothCore(const crv::ParametricCurvePoint& t,
 //    const crv::ParametricCurvePoint& t1, double wn);
-
-typedef ParametricCurvePoint<double> const SPCPoint;
     
     
 static double DL_dt_mul_sqr(const SPCPoint& pt, const SPCPoint& ptau)
@@ -77,14 +75,12 @@ static types::complex Smooth(const SPCPoint& ptau, const SPCPoint& pt, double wN
 
 static double Fi(int n, int col)
 {
-    n--;//needs to improve algorithm
-    return 2 * M_PI * col / (n + 1);
+    return 2 * M_PI * col / n;
 }
 
 static double Fi0(int n, int row)
 {
-    n--;
-    return (2 * row + 1) * M_PI / (n + 1);
+    return (2 * row + 1) * M_PI / n;
 }
 
 static double Hyper(const SPCPoint& pt0, const SPCPoint& pt, int n)

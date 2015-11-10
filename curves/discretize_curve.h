@@ -11,6 +11,8 @@ struct ParametricCurvePoint: public Point<T>
     Point<T> d2;
 };
 
+typedef ParametricCurvePoint<double> const SPCPoint;
+
 class DiscretizeCurve{
 public:
     typedef std::unique_ptr<DiscretizeCurve> Ptr;

@@ -5,6 +5,7 @@
 #include "incident_field_package.h"
 #include "helper.h"
 #include "ellipse.h"
+#include "cubic_spline.h"
 
 int main(int argc, char** argv) {
   double k = M_PI;
@@ -28,7 +29,7 @@ int main(int argc, char** argv) {
 //    listCurves.emplace_back( new Line({1.0 / 7.0, 1.25 + 1.5 * i}, {8.0 / 7.0, 1.25 + 1.5 * i}) );
 //  }
 
-  listCurves.emplace_back( new CEllipse(2, 1) );
+  listCurves.emplace_back( new CubicSpline() );
   EPolarizationField field(k, alpha);
   IncidentFieldPackage fields(k);
   fields.addIncidentField(field);

@@ -27,6 +27,7 @@ set (HEADERS
 
   ./curves/curve.h
   ./curves/ellipse.h
+  ./curves/cubic_spline.h
   ./curves/discretize_curve.h
 
   ./calculations/calc_manager.h 
@@ -47,6 +48,7 @@ set (HEADERS
 set (SOURCES 
   ./curves/curve.cpp
   ./curves/ellipse.cpp
+  ./curves/cubic_spline.cpp
 
   ./main.cpp
   ./calculations/field_solver.cpp
