@@ -124,18 +124,20 @@ void CalcManager::calcH()
     }
 
     Discretization d(discCurvesFi, discCurvesFi0, given.fields);
-
+    Timer timer;
+    timer.start();
     auto matr = d.createHMatrix(/*given.threads*/);
     //writeMatrix("matrix.txt", *matr, matr->height());
     auto x = d.createHArray();
-
-    gaussScheme(*matr, x, matr->height());
+    timer.stop();
+    std::cout << "fill matrix time:" << timer.interval()<<std::endl;
+    timer.start();
+    gaussMTBlockScheme(*matr, x, matr->height(), given.threads, given.tileSize);
+    timer.stop();
+    std::cout << "SLAE time:" << timer.interval()<<std::endl;
     std::vector<std::vector<types::complex>> currents;
     currents.push_back(x);
-//    for (size_t i = 0; i < matr->height(); i++)
-//    {
-//        std::cout << std::endl << x[i];
-//    }
+
 //////////////////////////////////////////////////////////////////////
     std::ofstream current_re("current_re.csv");
     current_re.imbue(std::locale(current_re.getloc(), new punct_facet<char, ','>));
@@ -151,13 +153,13 @@ void CalcManager::calcH()
 /////////////////////////////////////////////////////////////////////
     FieldSolver field_solver(discCurvesFi, currents, given.wavenumber);
 
-    std::ofstream field_out("field_test.csv");
+    std::ofstream field_out("field_k=pi_alpha=45.csv");
+    field_out.imbue(std::locale(field_out.getloc(), new punct_facet<char, ','>));
     for (double i = 0; i < 360; i += 0.5)
     {
         field_out << i<< ";";
     }
     field_out << std::endl;
-    field_out.imbue(std::locale(field_out.getloc(), new punct_facet<char, ','>));
     for (double i = 0; i < 360; i += 0.5)
     {
         field_out << std::abs(field_solver.farHField(i*M_PI/180))<< ";";
