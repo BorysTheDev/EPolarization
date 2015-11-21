@@ -107,6 +107,7 @@ MatrixPtr<types::complex> Discretization::createHMatrix()
 //              << "Smooth" << Smooth(pt, pt0, wN) << std::endl
 //              << "H     " << hpl::H((*curvesFi[0])[1], (*curvesFi0[0])[1], wN, n) << std::endl;
 
+    #pragma omp parallel for shared(matr)
     for (size_t row = 0; row < curvesFi0[0]->size(); row++)
     {
         for (size_t col = 0; col < curvesFi[0]->size(); col++)

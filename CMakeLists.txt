@@ -19,7 +19,7 @@ include_directories (./gauss)
 add_subdirectory(gauss)
 
 if(CMAKE_COMPILER_IS_GNUCC)
-add_definitions (-Wall -pedantic -std=gnu++11 -g)
+add_definitions (-Wall -pedantic -std=gnu++11 -O2 -fopenmp)
 endif()
 
 set (HEADERS 
@@ -70,6 +70,6 @@ add_executable (${PROJECT} ${HEADERS} ${SOURCES})
 
 #target_link_libraries(${PROJECT} qts)
 if(CMAKE_COMPILER_IS_GNUCC)
-  target_link_libraries(${PROJECT} pthread)
+  target_link_libraries(${PROJECT} pthread libgomp-1)
 endif()
 #target_link_libraries(${PROJECT} ${QT_LIBRARIES})
